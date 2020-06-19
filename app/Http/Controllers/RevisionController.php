@@ -19,7 +19,7 @@ class RevisionController extends Controller
     function RevisionCategory($id){
         $data = $mark = $total_question = NULL;
 
-        
+
         $lab = ui_team_work::findOrFail(10)->content;
         $path = "q-bank/revision-category/question/";
         $action_single = "revision/compare/single" ;
@@ -46,7 +46,7 @@ class RevisionController extends Controller
                                     ->where('status', '0')
                                     ->orderBy('id', 'ASC')
                                     ->count();
-    
+
                 if ($counter > 20) {
                     $total_question = 20;
                 }else{
@@ -58,7 +58,7 @@ class RevisionController extends Controller
             }
         }elseif(Auth::user()->role == 3 || Auth::user()->role == 5 || Auth::user()->role == 6) {
             //refugees, basic, standard
-            
+
             //get total questions
             $cat_data = categoty::orderBy('id', 'ASC')->get();
             $cat_idList = [];
@@ -71,7 +71,7 @@ class RevisionController extends Controller
             //return $totalQuestion;
             $number_of_q = round((question::where('cat_id',$id)->count() * 2000) / $totalQuestion);
             //return question::where('cat_id',$id)->count();
-            
+
             $data = question::where('cat_id',$id)
                         ->where('status','0')
                         ->orderBy('id','ASC')
@@ -108,14 +108,15 @@ class RevisionController extends Controller
             $mark = collect($newArray);//make object
             $counter = count($newArray);
             */
-            
+
             if ($counter > $number_of_q) {
                 $total_question = $number_of_q;
             }else{
                 $total_question = $counter;
             }
-            
+
         }else{
+
             //advanced and professional unlimited
             $data = question::select()->where('cat_id',$id)
                         ->where('status','0')
@@ -125,17 +126,19 @@ class RevisionController extends Controller
             $total_question = question::where('cat_id',$id)
                         ->where('status','0')->count();
         }
-        
+
+        $files = $data[0]->assets()->get();
+
         return view('frontend.revision-exam-category',[
             'data'=>$data,'total_question'=>$total_question,'id'=>$id,'lab'=>$lab,
             'mark'=>$mark,'path'=>$path,'action_single'=>$action_single,
-            'action_multi'=>$action_multi]);
+            'action_multi'=>$action_multi, 'files' => $files]);
     }
-    
-    
+
+
     function UserCategory($id){
         $lab = ui_team_work::findOrFail(10)->content;
-        
+
         $data = $mark = $total_question = NULL;
         if (Auth::user()->role == 1 || Auth::user()->role == 4) {
             //no access for non verified or admin
@@ -169,14 +172,14 @@ class RevisionController extends Controller
         $path = "q-bank/recall-exam/";
         $action_single = "revision/recall/compare/single" ;
         $action_multi  = "revision/recall/compare/multi" ;
-        
+
         if(Auth::user()->role == 1 || Auth::user()->role == 4){
             //no access non verified users or admin
             return back();
         }elseif (Auth::user()->role == 2) {
             //trial - questions limited
             $recall_data__ = recallmodel::orderBy('id', 'ASC')->first();
-        
+
 
             if($recall_data__){
                 $data = question::where('status', $recall_data__->id)
@@ -187,12 +190,12 @@ class RevisionController extends Controller
                 $mark = question::where('status',$recall_data__->id)
                                 ->orderBy('id', 'ASC')
                                 ->take(20)->get();
-                
-        
+
+
                 $counter = question::where('status',$recall_data__->id)
                             ->orderBy('id', 'ASC')
                                 ->count();
-    
+
                 if ($counter > 20) {
                     $total_question = 20;
                 }else{
@@ -201,8 +204,8 @@ class RevisionController extends Controller
             }else{
                 return back();
             }
-            
-            
+
+
         }elseif(Auth::user()->role == 3 || Auth::user()->role == 5) {
             //refugees, basic
             return redirect()->back()
@@ -214,7 +217,7 @@ class RevisionController extends Controller
             $mark = question::select()->where('status',$id)
                             ->get();
 
-           $total_question = question::where('status',$id)->count(); 
+           $total_question = question::where('status',$id)->count();
         }
 
         return view('frontend.revision-exam-category',['data'=>$data,'total_question'=>$total_question,'id'=>$id,'lab'=>$lab,'mark'=>$mark,'path'=>$path,'action_single'=>$action_single,'action_multi'=>$action_multi]);

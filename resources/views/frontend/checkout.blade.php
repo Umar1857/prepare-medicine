@@ -56,7 +56,7 @@
     	font-size: 20px !important
     }
     .payNowBtn{
-    	background: green !important;
+    	background: #63BA52 !important;
 	    padding: 10px 15px !important;
 	    color: #fff !important;
 	    font-weight: bold !important;

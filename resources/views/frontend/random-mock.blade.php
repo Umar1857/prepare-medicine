@@ -1,28 +1,29 @@
 @extends('frontend.master-frontend')
 @section('content')
+<br>
     {{--  data fetch from Database !!  --}}
 
-    <div class="container-fluid" style="padding-left: 30px; padding-right: 30px"> 
+    <div class="container-fluid"> 
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Random Mock </p>
             </div>
         </div>
-        <h2 style="font-size: 25px;text-align: center;">RANDOM MOCKS</h2>
-        <p style="text-align: justify;">
-               Your opportunity to test yourself on randomly generated full simulation of the GMC PlAB-1 Exam, which timed 3:00 hours for 180 MCQs.
-        <br>
-               These are timed, random mock exams using a selection of questions from our extensive Q Bank. You may find you have answered a question previously, but it is likely that many are new to you. This gives you the chance to time yourself to exam conditions for the PLAB 1
-        </p>
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-    
-        @endif
+        <h2 class="text-center mt-4 mb-sm-5 mb-4" style="font-size: 36px;">RANDOM MOCKS</h2>
+        <div class="container">
+            <p style="text-center">
+                Your opportunity to test yourself on randomly generated full simulation of the GMC PlAB-1 Exam, which timed 3:00 hours for 180 MCQs.
+            <br>
+                These are timed, random mock exams using a selection of questions from our extensive Q Bank. You may find you have answered a question previously, but it is likely that many are new to you. This gives you the chance to time yourself to exam conditions for the PLAB 1
+            </p>
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
         
-       <div class="row" style="padding-left: 35px; padding-right: 35px">
+            @endif
+        </div>
+       <div class="row my-4 my-md-5" style="padding-left: 35px; padding-right: 35px">
             @foreach ($expired_data as $key => $item)
                 @if ($key%4 == '0')
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2">

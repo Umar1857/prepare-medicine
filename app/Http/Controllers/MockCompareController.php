@@ -14,6 +14,7 @@ class MockCompareController extends Controller
         if(empty($request->answer) && $request->answer != '0'){
             return back()->withErrors('You have to check a answer !!');
         }
+
         $main_ans = mockquestion::findOrFail($request->question_id)->ans;
         if ($main_ans == $request->answer) {
             mockquestion::findOrFail($request->question_id)->update([
@@ -31,6 +32,7 @@ class MockCompareController extends Controller
         mockinformation::where('exam_id',$request->exam_id)->update([
             'time' => $request->input_time,
         ]);
+
         // time contert
         $fetch_time = mockinformation::select()->where('exam_id',$request->exam_id)->get()[0]->time;
         $array_time = explode(':',$fetch_time);

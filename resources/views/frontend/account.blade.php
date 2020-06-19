@@ -1,5 +1,6 @@
 @extends('frontend.master-frontend')
 @section('content')
+<br>
 
 <div class='container'>
     <div class='page_banner_img_common'>

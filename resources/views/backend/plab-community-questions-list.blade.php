@@ -25,7 +25,7 @@
             cursor: pointer;
         }
 
-        
+
 
         .action_bar .btn{
             margin-bottom: 5px;
@@ -48,12 +48,13 @@
             display: block !important;
           }
         }
-        
+
 
 
     </style>
 @endsection
 @section('content')
+<br>
 
 <div class="panel panel-white">
     @if ($errors->any())
@@ -76,7 +77,7 @@
     <br>
     <div style="clear:both">
         <div class="col-12">
-            
+
         </div>
     </div>
 
@@ -84,8 +85,8 @@
     <div class="panel-body">
         <div class="table-responsive">
 
-            <form action="{{ url('admin/question/select') }}" method="post">
-                <table class="table table-bordered">
+            <form class="custom_form"action="{{ url('admin/question/select') }}" method="post">
+                <table class="table table-bordered data_table">
                     <thead>
                         <tr>
                             {{-- <th>Select</th> --}}
@@ -129,8 +130,13 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a style="background-color: #0A68D4; color: #fff; border: none;" class="btn btn-sm" data-toggle="modal" data-target="#viewDetails{{ $item->id }}"><i class="fa fa-eye"></i></a>
-                                    <a onclick="return confirm('Are you sure?')" style="background-color: red; border: none;" class="btn btn-sm" href="{{ route('admin.getCommunityQuestionsList.reject', $item->id) }}"><i class="fa fa-remove delete"></i></a>
+                                    @if(auth()->user()->can('View Community Question'))
+                                        <a style="background-color: #0A68D4; color: #fff; border: none;" class="btn btn-sm" data-toggle="modal" data-target="#viewDetails{{ $item->id }}"><i class="fa fa-eye"></i></a>
+                                    @endif
+
+                                    @if(auth()->user()->can('Delete Community Question'))
+                                        <a style="background-color: red; border: none;" class="btn btn-sm delete-btn" href="{{ route('admin.getCommunityQuestionsList.reject', $item->id) }}"><i class="fa fa-remove delete"></i></a>
+                                    @endif
                                 </td>
                             </tr>
 
@@ -158,7 +164,7 @@
             <div class="modal-body">
 
 
-                    <form action="{{ url('admin/question/edit/single') }}" method="POST">
+                    <form class="custom_form"action="{{ url('admin/question/edit/single') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id }}">
                         <div class="form-group">
@@ -171,14 +177,14 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         {{--
                         <div class="form-group">
                             <label>Question Id</label>
                             <input class="form-control" name="search_id" value="{!! $item->search_id !!}" readonly='1'>
                         </div>
                         --}}
-                        
+
                         <div class="form-group">
                             <label>Question</label>
                             <textarea class="form-control my-editor" name="question" readonly='1'>{!! $item->question !!}</textarea>

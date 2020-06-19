@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Asset;
+use App\Services\CourseService;
 use Illuminate\Http\Request;
 use App\Course;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class CourseController extends Controller
 {
+    public $course_service;
+
+    public function __construct()
+    {
+        $this->course_service = new CourseService();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,9 +51,10 @@ class CourseController extends Controller
         $validate = Validator::make($request->all(),[
             'title'=>'required',
             'description'=>'required',
-            'featured_img'=>'required'
+            'featured_img'=>'required',
+            'reference_files' => 'nullable'
         ]);
-        
+
         if ($validate->fails()) {
             return redirect()->back()
                 ->withInput()
@@ -59,12 +69,21 @@ class CourseController extends Controller
             $img_uniqueName = $currentTimeDate.'-'.uniqid().'.'.$submitted_image->getClientOriginalExtension();
 
             //now check directory
-            if (!file_exists('/home/kohin837/public_html/preparemedicine.com/storage/course')) {
-                mkdir('/home/kohin837/public_html/preparemedicine.com/storage/course', 0777, true);
+            if (env('APP_ENV') == 'local') {
+                $course_path = storage_path('app/public/course');
+            } else {
+                $course_path = env('STORAGE_PATH').'/course';
+            }
+
+            //now check directory
+            if (!file_exists($course_path)) {
+                if (!mkdir($course_path, 0775, true) && !is_dir($course_path)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $course_path));
+                }
             }
 
             //now move upload image ok
-            $moved = $submitted_image->move('/home/kohin837/public_html/preparemedicine.com/storage/course/', $img_uniqueName);
+            $moved = $submitted_image->move($course_path, $img_uniqueName);
             if ($moved) {
                 $imgName = $img_uniqueName;
             }else{
@@ -74,20 +93,65 @@ class CourseController extends Controller
             }
         }
 
-        $inserted = Course::insert([
-                    'title'=>$request->title,
-                    'duration'=>$request->duration,
-                    'description'=>$request->description,
-                    'featured_img'=>$imgName,
-                    'created_at'=>Carbon::now(),
-                ]);
-        if ($inserted == true) {
-            return redirect()->back()
-                    ->with('success', 'SUCCESS - Post Saved');
-        }else{
-            return redirect()->back()
-                    ->with('error', 'SORRY - Something Wrong...');
+        $course_id = Course::insertGetId([
+            'title'=>$request->title,
+            'duration'=>$request->duration,
+            'description'=>$request->description,
+            'featured_img'=>$imgName,
+            'created_at'=>Carbon::now(),
+        ]);
+
+
+        /* IF Question Saved Successfully then Add Asset Files */
+        if (!empty($course_id) && $request->hasFile('reference_files')) {
+
+            foreach ($request->file('reference_files') as $file) {
+                if ($file) {
+                    $currentTimeDate = Carbon::now()->toDateString();
+                    $file_extension = $file->getClientOriginalExtension();
+                    $file_original_name = $file->getClientOriginalName();
+                    $file_name = $currentTimeDate . '-' . uniqid() . '.' . $file_extension;
+
+                    //now check directory
+                    if (env('APP_ENV') == 'local') {
+                        $path = storage_path('app/public/course/' . $course_id);
+                    } else {
+                        $path = env('STORAGE_PATH').'/course/' . $course_id;
+                    }
+
+                    if (!file_exists($path)) {
+                        if (!mkdir($path, 0775, true) && !is_dir($path)) {
+                            throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+                        }
+                    }
+
+                    // Now Move the Files to Desired Path
+                    $moved = $file->move($path, $file_original_name);
+                    if (!$moved) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('error', 'Explanation Files Upload Problem');
+                    }
+                }
+
+                $course = $this->course_service->findById($course_id);
+
+                $asset = new Asset();
+                $asset->name = $file_original_name;
+                $asset->path = $path . '/' . $file_original_name;
+                $asset->type = $file_extension;
+
+                $inserted = $course->assets()->save($asset);
+
+                if (!$inserted->id) {
+                    return redirect()->back()
+                        ->with('error', 'SORRY - Something Wrong...');
+                }
+            }
         }
+
+        return redirect()->back()
+            ->with('success', 'SUCCESS - Post Saved');
     }
 
     /**
@@ -116,7 +180,7 @@ class CourseController extends Controller
         }else{
             return abort(404);
         }
-        
+
     }
 
     /**
@@ -128,32 +192,38 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $data = Course::where('id', $id)->first();
-       
+        $data = Course::where('id', $id)->first();
+
         if ($data) {
-           $validate = Validator::make($request->all(),[
+            $validate = Validator::make($request->all(),[
                 'title'=>'required',
                 'description'=>'required',
             ]);
-            
+
             if ($validate->fails()) {
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'SORRY - Title, Duration & Description fields required');
             }
 
-           if ($request->hasFile('featured_img')) {
+            if ($request->hasFile('featured_img')) {
 
                 //make image
                 $submitted_image = $request->file('featured_img');
                 $imgName = "";
-                    
+
                 $currentTimeDate = Carbon::now()->toDateString();
                 $img_uniqueName = $currentTimeDate.'-'.uniqid().'.'.$submitted_image->getClientOriginalExtension();
 
+                //now check directory
+                if (env('APP_ENV') == 'local') {
+                    $course_path = storage_path('app/public/course');
+                } else {
+                    $course_path = env('STORAGE_PATH').'/course';
+                }
 
                 //now move upload image ok
-                $moved = $submitted_image->move('/home/kohin837/public_html/preparemedicine.com/storage/course/', $img_uniqueName);
+                $moved = $submitted_image->move($course_path, $img_uniqueName);
                 if ($moved) {
                     $imgName = $img_uniqueName;
                 }else{
@@ -162,46 +232,93 @@ class CourseController extends Controller
                         ->with('error', "Featured Image Uploading Problem");
                 }
 
-               $updated = Course::where('id', $id)->update([
-                        'title'=>$request->title,
-                        'duration'=>$request->duration,
-                        'description'=>$request->description,
-                        'featured_img'=>$imgName,
-                        'updated_at'=>Carbon::now(),
-                ]);
-               
-               if ($updated == true) {
-                   
-                   //first delete img
-                   $img = url('storage/course/').$data->featured_img;
-                   if ($img) {
-                       unlink('storage/course/'.$data->featured_img);
-                   }
-               
-                    return redirect()->back()
-                            ->with('success', 'SUCCESS - Post Updated');
-                }else{
-                    return redirect()->back()
-                            ->with('error', 'SORRY - Something Wrong...');
+                //first delete img
+                $img = public_path('storage/course/'.$data->featured_img);
+                if (file_exists($img)) {
+                    unlink(public_path('storage/course/'.$data->featured_img));
                 }
-           }else{
-                $updated = Course::where('id', $id)->update([
-                            'title'=>$request->title,
-                            'duration'=>$request->duration,
-                            'description'=>$request->description,
-                            'updated_at'=>Carbon::now(),
-                    ]);
-                   if ($updated == true) {
-                        return redirect()->back()
-                                ->with('success', 'SUCCESS - Post Updated');
-                    }else{
-                        return redirect()->back()
-                                ->with('error', 'SORRY - Something Wrong...');
-                    }
-           }
-            
-        } 
 
+                $updated = Course::where('id', $id)->update([
+                    'title'=>$request->title,
+                    'duration'=>$request->duration,
+                    'description'=>$request->description,
+                    'featured_img'=>$imgName,
+                    'updated_at'=>Carbon::now(),
+                ]);
+            } else {
+                $updated = Course::where('id', $id)->update([
+                    'title'=>$request->title,
+                    'duration'=>$request->duration,
+                    'description'=>$request->description,
+                    'updated_at'=>Carbon::now(),
+                ]);
+            }
+
+
+            /* IF Blog Saved Successfully then Add Reference Files */
+            if (!empty($updated) && $request->hasFile('reference_files')) {
+
+                $course = $this->course_service->findById($id);
+
+                /* Delete files from Directory */
+                $files = $course->assets()->pluck('path')->toArray();
+
+                foreach ($files as $file) {
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+                }
+
+                /* Delete Asset Files */
+                $deleted = $course->assets()->delete();
+
+
+                foreach ($request->file('reference_files') as $file) {
+                    if ($file) {
+                        $currentTimeDate = Carbon::now()->toDateString();
+                        $file_extension = $file->getClientOriginalExtension();
+                        $file_original_name = $file->getClientOriginalName();
+                        $file_name = $currentTimeDate . '-' . uniqid() . '.' . $file_extension;
+
+                        //now check directory
+                        if (env('APP_ENV') == 'local') {
+                            $path = storage_path('app/public/course/' . $id);
+                        } else {
+                            $path = env('STORAGE_PATH').'/course/' . $id;
+                        }
+
+                        if (!file_exists($path)) {
+                            if (!mkdir($path, 0775, true) && !is_dir($path)) {
+                                throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+                            }
+                        }
+
+                        // Now Move the Files to Desired Path
+                        $moved = $file->move($path, $file_original_name);
+                        if (!$moved) {
+                            return redirect()->back()
+                                ->withInput()
+                                ->with('error', 'Explanation Files Upload Problem');
+                        }
+                    }
+
+                    $asset = new Asset();
+                    $asset->name = $file_original_name;
+                    $asset->path = $path . '/' . $file_original_name;
+                    $asset->type = $file_extension;
+
+                    $inserted = $course->assets()->save($asset);
+
+                    if (!$inserted->id) {
+                        return redirect()->back()
+                            ->with('error', 'SORRY - Something Wrong...');
+                    }
+                }
+            }
+
+            return redirect()->back()
+                ->with('success', 'SUCCESS - Post Saved');
+        }
     }
 
     /**
@@ -212,41 +329,42 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-       $data = Course::where('id', $id)->first();
+        $data = Course::where('id', $id)->first();
 
-       if ($data) {
-           $img = url('storage/course/').$data->featured_img;
-           if ($img) {
-               unlink('storage/course/'.$data->featured_img);
-           }
-           $deleted = $data->delete();
-           if ($deleted == true) {
-               return redirect()->back()
+        if ($data) {
+            $img = public_path('storage/course/'.$data->featured_img);
+
+            if (file_exists($img)) {
+                unlink(public_path('storage/course/'.$data->featured_img));
+            }
+
+            $deleted = $data->delete();
+
+            if ($deleted == true) {
+                return redirect()->back()
                     ->with('success', 'SUCCESS - Post Deleted');
-           }else{
+            }else{
                 return redirect()->back()
                     ->with('error', 'SORRY - Something Wrong');
-           }
-       }else{
-        return abort(404);
-       }
-       
-    }
-
-
-
-
-    //for frontned
-    public function details($id){
-        $data = Course::where('id', $id)->first();
-        if ($data) {
-            return view('frontend.course.course-details', compact('data'));
+            }
         }else{
             return abort(404);
         }
-        
+
     }
-    
+
+    //for frontned
+    public function details($id) {
+        $data = Course::where('id', $id)->first();
+        $files = $data->assets()->get();
+        if ($data) {
+            return view('frontend.course.course-details', compact('data', 'files'));
+        }else{
+            return abort(404);
+        }
+
+    }
+
     //get courses all
     public function get_course_list(){
         $course_list = Course::orderBy('id', 'DESC')->paginate(30);

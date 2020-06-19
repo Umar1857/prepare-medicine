@@ -31,7 +31,7 @@ class CommunityController extends Controller
             'link' => "required",
             'cat_img' => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
-        
+
         $name = "";
         if ($request->hasFile('cat_img')) {
             $image = $request->file('cat_img');
@@ -40,7 +40,7 @@ class CommunityController extends Controller
         }else{
             return back()->with('error', 'SORRY - Image Required.');
         }
-        
+
         community::insert([
             'name' => $request->name,
             'link' => $request->link,
@@ -56,8 +56,8 @@ class CommunityController extends Controller
             'name' => "required",
             'link' => "required",
         ]);
-        
-        
+
+
         if(empty($request->cat_img)){
             community::where('id',$id)->update([
                 'name' => $request->name,
@@ -74,7 +74,7 @@ class CommunityController extends Controller
             }else{
                 return back()->with('error', 'SORRY - Image Required.');
             }
-    
+
             community::where('id',$id)->update([
                 'name' => $request->name,
                 'link' => $request->link,
@@ -85,7 +85,7 @@ class CommunityController extends Controller
             }
         }
         return back()->with('success', 'SUCCESS - Data updated');
-        
+
     }
 
     function FacebookpAdd(Request $request){
@@ -96,7 +96,7 @@ class CommunityController extends Controller
             'link' => "required",
             'cat_img' => "required|image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
-        
+
         $name = "";
         if ($request->hasFile('cat_img')) {
             $image = $request->file('cat_img');
@@ -105,7 +105,7 @@ class CommunityController extends Controller
         }else{
             return back()->with('error', 'SORRY - Image Required.');
         }
-        
+
         community::insert([
             'name' => $request->name,
             'link' => $request->link,
@@ -121,8 +121,8 @@ class CommunityController extends Controller
             'name' => "required",
             'link' => "required",
         ]);
-        
-        
+
+
         if(empty($request->cat_img)){
             community::where('id',$id)->update([
                 'name' => $request->name,
@@ -139,7 +139,7 @@ class CommunityController extends Controller
             }else{
                 return back()->with('error', 'SORRY - Image Required.');
             }
-    
+
             community::where('id',$id)->update([
                 'name' => $request->name,
                 'link' => $request->link,
@@ -155,16 +155,16 @@ class CommunityController extends Controller
     function CommunityCommunity($id){
         if(Auth::user()->role == '4'){
             $data = community::where('id',$id)->first();
-            if($data->cat_img){
+            if(file_exists('storage/community-groups/'.$data->cat_img)){
                 unlink('storage/community-groups/'.$data->cat_img);
             }
             community::where('id',$id)->delete();
         }
         return back()->with('success',"You Deleted a Group !!");
     }
-    
-    
-    
+
+
+
     //get plab community questions list for admin view
     function getCommunityQuestionsList(){
 
@@ -174,26 +174,26 @@ class CommunityController extends Controller
                     ->paginate(30);
         return view('backend.plab-community-questions-list',['data'=>$data,'category'=>$category]);
     }
-    
+
     //get plab community questions list for admin view
     function communityQuestionReject($id){
 
         user_question::where('id', $id)->delete();
-        
+
         $data_list = user_answer::where('ques_id', $id)->get();
         if(!$data_list->isEmpty()){
             foreach($data_list as $value){
                 user_answer::where('id', $value->id)->delete();
             }
         }
-        
+
         $data_list__r = user_revision::where('ques_id', $id)->get();
         if(!$data_list__r->isEmpty()){
             foreach($data_list__r as $value){
                 user_revision::where('id', $value->id)->delete();
             }
         }
-        
+
         return back()->with('success', 'Question Deleted');
     }
 }

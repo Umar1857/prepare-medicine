@@ -7,7 +7,7 @@
             display: ruby;
         }
         .user-name-show{
-            color:green;
+            color:#63BA52;
             display: ruby;
         }
         .user-feedback{
@@ -36,9 +36,9 @@
 
 @endsection
 @section('content')
+<br>
 
     {{--  data fetch from Database !!  --}}
-    <br><br>
     <div class="panel panel-warning">
         <div class="col-12 block">
             <button class="btn btn-primary right" data-toggle="modal" data-target="#add-video">Add Video</button>

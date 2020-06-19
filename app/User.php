@@ -6,11 +6,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use SoftDeletes;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'f_name', 's_name','school','country', 'email', 'password','gender','expeir_date'
+        'f_name', 's_name','school','country', 'email', 'password','gender','expeir_date', 'free_user_type'
     ];
 
     /**
@@ -38,10 +40,22 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
-    
+
+
     public function get_country(){
         return $this->belongsTo('\App\country', 'country', 'id');
     }
-    
+
+    public function contact() {
+        return $this->hasMany('App\Contact');
+    }
+
+    public function ticket() {
+        return $this->hasMany('App\Ticket');
+    }
+
+    public function plabcourse() {
+        return $this->hasMany('App\PlabCourse');
+    }
+
 }

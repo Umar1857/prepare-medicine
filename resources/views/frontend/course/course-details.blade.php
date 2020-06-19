@@ -26,16 +26,33 @@
 @endsection
 
 @section('content')
+<br>
     <br>
     <div class="container">
         <h3 class="heading_">{{ $data->title }}</h3>
         <!--<h5 class="sub_heading_">{{ $data->duration }}</h5>-->
 
-        <div class="text-center" style="margin-bottom: 30px"> 
+        <div class="text-center" style="margin-bottom: 30px">
             <img src="{{ url('storage/course/'.$data->featured_img) }}">
         </div>
 
         <?php echo $data->description; ?>
-    </div>  
+
+        @if(!empty($files))
+            <div>
+                <p class="text-uppercase" style="margin-left: -15px;font-weight:bold;font-size:16px">REFERENCE FILES</p>
+                @foreach($files as $file)
+                    @if(in_array($file->type, array('pdf', 'jpeg', 'jpg', 'png')))
+                        <div><a href="{{route('view_file', $file->id)}}" target="_blank">{{$file->name}}</a></div>
+                    @elseif($file->type === 'mp4')
+                        <video width='320' height= '240' controls>
+                            <source src='google.guru' type='video/mp4'>
+                            Your browser does not support the video tag.
+                        </video>
+                    @endif
+                @endforeach
+            </div>
+        @endif
+    </div>
     <br><br>
 @endsection

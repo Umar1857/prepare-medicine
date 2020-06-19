@@ -42,7 +42,7 @@ class RevisionCompareController extends Controller
                 'status' => '2',
             ]);
         }
-        
+
         //auto next page off
         // if ( $request->page == '0' ) {
         //     return back();
@@ -71,7 +71,7 @@ class RevisionCompareController extends Controller
         }
         $main_ans = question::findOrFail($request->question_id)->ans;
         $ques_cat = question::findOrFail($request->question_id)->cat_id;
-        
+
         if ($main_ans == $answer) {
             //correct ans
             revision::insert([
@@ -114,7 +114,7 @@ class RevisionCompareController extends Controller
             return redirect()->back()->with('error', "SORRY! Your Subscription Plan is Trail. So, you can't more revision.");
         }
         $main_ans = user_question::findOrFail($request->question_id)->ans;
-        
+
         if ($main_ans == $request->answer) {
             user_revision::insert([
                 'user_id' => Auth::user()->id,
@@ -188,7 +188,7 @@ class RevisionCompareController extends Controller
         }
         $main_ans = question::findOrFail($request->question_id)->ans;
         $ques_cat = question::findOrFail($request->question_id)->cat_id;
-        
+
         if ($main_ans == $request->answer) {
             revision::insert([
                 'user_id' => Auth::user()->id,
@@ -236,7 +236,7 @@ class RevisionCompareController extends Controller
         }
         $main_ans = question::findOrFail($request->question_id)->ans;
         $ques_cat = question::findOrFail($request->question_id)->cat_id;
-        
+
         if ($main_ans == $answer) {
             revision::insert([
                 'user_id' => Auth::user()->id,

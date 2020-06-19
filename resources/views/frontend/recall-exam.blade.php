@@ -3,7 +3,8 @@
 
 
 
-@section('content') --}}
+@section('content')
+<br> --}}
 {{--  data fetch from Database !!  --}}
 {{-- OLD CODE <br><br>
 
@@ -32,27 +33,27 @@
 
 @extends('frontend.master-frontend')
 @section('content')
+<br>
 
 {{--  data fetch from Database !!  --}}
 
     <div class="container-fluid" style="padding-left: 25px; padding-right: 25px">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Recall Exam</p>
             </div>
         </div>
     
-        <div class="col-lg-12 col-md-12 col-sm-12 text-center">
-            <h2 style="font-size: 35px;">Recall Exam</h2>
         
-            <p class="text-justify">
+        <h2 class="text-center mt-4 mb-sm-5 mb-4" style="font-size: 36px;">Recall Exam</h2>
+        <div class="container">
+            <p class="text-center">
                 Our bank of volunteers who have recently sat the PLAB 1 already have provided us with their recall of the typical questions they an-swered. This has enabled our team to provide our service users with the most recent questions set and asked in the exam. We ask that anybody who is about to sit the exam consider letting us know the type of question asked and it enables out team to provide the most up to date mock exams and questions 
             </p>
         </div>
-        <br>
         
-        <div class="row" style="padding-left: 35px; padding-right: 35px">
+        
+        <div class="row my-4 my-md-5" style="padding-left: 35px; padding-right: 35px">
             {{-- OLD CODE
             @foreach ($data as $key=>$item)
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-2">

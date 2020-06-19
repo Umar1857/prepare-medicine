@@ -28,6 +28,7 @@
     </style>
 @endsection
 @section('content')
+<br>
 
 <div class="panel panel-white">
     @if ($errors->any())
@@ -47,28 +48,37 @@
     <div class="panel-heading clearfix">
         <h4 class="panel-title">Question</h4>
     </div>
-    <div class="panel-heading clearfix btn-left">
-        <a class="btn btn-info" href="{{ url('admin/recall/question/single/'.$id) }}">show singlechoice Question</a>
-        <a class="btn btn-info" href="{{ url('admin/recall/question/multi/'.$id) }}">Show multichoice question</a>
-    </div>
-    <div class="panel-heading clearfix btn-right">
-        <a class="btn btn-info" href="{{ url('admin/recall/question/add/single/'.$id) }}">Add Question(Single Answer )</a>
-        <a class="btn btn-info" href="{{ url('admin/recall/question/add/multi/'.$id) }}">Add Question(Multi Answer )</a>
-    </div>
+
+        @if(auth()->user()->can('View Question'))
+            <div class="panel-heading clearfix btn-left">
+                <a class="btn btn-info" href="{{ url('admin/recall/question/single/'.$id) }}">show singlechoice Question</a>
+                <a class="btn btn-info" href="{{ url('admin/recall/question/multi/'.$id) }}">Show multichoice question</a>
+            </div>
+        @endif
+
+        @if(auth()->user()->can('Create Question'))
+            <div class="panel-heading clearfix btn-right">
+                <a class="btn btn-info" href="{{ url('admin/recall/question/add/single/'.$id) }}">Add Question(Single Answer )</a>
+                <a class="btn btn-info" href="{{ url('admin/recall/question/add/multi/'.$id) }}">Add Question(Multi Answer )</a>
+            </div>
+        @endif
+
     <br><br><br>
-    <div style="clear:both">
-        <div class="col-12">
-            <p>Mock Upload Single type Question</p>
-            <form class="form-inline" method="post" action="{{ url('admin/recall/question/import') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label for="pwd">Excel File</label>
-                    <input type="file" class="form-control" id="pwd" name="excel">
+        @if(auth()->user()->can('Create Question'))
+            <div style="clear:both">
+                <div class="col-12">
+                    <p>Mock Upload Single type Question</p>
+                    <form class="form-inline" method="post" action="{{ url('admin/recall/question/import') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="pwd">Excel File</label>
+                            <input type="file" class="form-control" id="pwd" name="excel">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-        </div>
-    </div>
+            </div>
+        @endif
 
     <br><br>
     <div class="panel-body">
@@ -98,15 +108,23 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a data-toggle="modal" data-target="#EditCat{{ $item->id }}"><i class="fa fa-edit edit"></i></a>
-                                    <a href="{{ url('admin/question/drop/'.$item->id) }}"><i class="fa fa-remove delete"></i></a>
+                                    @if(auth()->user()->can('Edit Question'))
+                                        <a data-toggle="modal" data-target="#EditCat{{ $item->id }}"><i class="fa fa-edit edit"></i></a>
+                                    @endif
+
+                                    @if(auth()->user()->can('Delete Question'))
+                                        <a href="{{ url('admin/question/drop/'.$item->id) }}"><i class="fa fa-remove delete"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
                 @csrf
-                <input type="submit" value="Delete" class="btn btn-danger">
+
+                @if(auth()->user()->can('Delete Question'))
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                @endif
             </form>
             <span style="float:right"> {{ $data->links() }}</span>
         </div>

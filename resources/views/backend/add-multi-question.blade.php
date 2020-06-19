@@ -12,71 +12,115 @@
     </style>
 @endsection
 @section('content')
+<br>
 
     <div class="panel panel-white">
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
         @if (session("success"))
             <div class="alert alert-success">
                 {{ session("success") }}
             </div>
         @endif
         <div class="panel-heading clearfix">
-            <form action="{{ url('admin/question/add/multi') }}" method="POST">
+            <form action="{{ url('admin/question/add/multi') }}" enctype="multipart/form-data" method="POST">
                 @csrf
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
                     <label>Category</label>
-                    <select class="select-2 form-control" name="category">
+                    <select class="select-2 form-control{{ $errors->has('category') ? ' has-error' : '' }}" name="category">
                         @foreach ($category as $item)
-                            <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                            <option value="{{ $item->id }}" {{$item->id == old('category') ? 'selected' : ''}}>{{ $item->name }}</option>
                         @endforeach
                     </select>
+
+                    @if ($errors->has('category'))
+                        <span class="error-block">
+                             <strong>{{ $errors->first('category') }}</strong>
+                        </span>
+                    @endif
                 </div>
 
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('question_id') ? ' has-error' : '' }}">
+                    <label>Question Id</label>
+                    <input type="text" class="form-control{{ $errors->has('question_id') ? ' has-error' : '' }}" name="question_id" value="{{old('question_id') ? old('question_id') : ''}}">
+
+                    @if ($errors->has('question_id'))
+                        <span class="error-block">
+                             <strong>{{ $errors->first('question_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                     <label>Enter Question</label>
-                    <textarea class="form-control my-editor" name="question"></textarea>
+                    <textarea class="form-control my-editor" name="question">{{old('question')}}</textarea>
+
+                    @if ($errors->has('question'))
+                        <span class="error-block">
+                             <strong>{{ $errors->first('question') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
+                    <input type="checkbox" name="answer[]" value="0" {{old('answer') && in_array(0, old('answer')) ? 'checked' : ''}}>
+                    <label>Option A</label>
+                    <input type="text" class="form-control{{ $errors->has('answer') ? ' has-error' : '' }}" name="ans[]" value="{{old('ans') ? old('ans')[0] : ''}}">
+                </div>
+                <div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
+                    <input type="checkbox" name="answer[]" value="1" {{old('answer') && in_array(1, old('answer')) ? 'checked' : ''}}>
+                    <label>Option B</label>
+                    <input type="text" class="form-control{{ $errors->has('answer') ? ' has-error' : '' }}" name="ans[]" value="{{old('ans') ? old('ans')[1] : ''}}">
+                </div>
+                <div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
+                    <input type="checkbox" name="answer[]" value="2" {{old('answer') && in_array(2, old('answer')) ? 'checked' : ''}}>
+                    <label>Option C</label>
+                    <input type="text" class="form-control{{ $errors->has('answer') ? ' has-error' : '' }}" name="ans[]" value="{{old('ans') ? old('ans')[2] : ''}}">
+                </div>
+                <div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
+                    <input type="checkbox" name="answer[]" value="3" {{old('answer') && in_array(3, old('answer')) ? 'checked' : ''}}>
+                    <label>Option D</label>
+                    <input type="text" class="form-control{{ $errors->has('answer') ? ' has-error' : '' }}" name="ans[]" value="{{old('ans') ? old('ans')[3] : ''}}">
+                </div>
+                <div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
+                    <input type="checkbox" name="answer[]" value="4" {{old('answer') && in_array(4, old('answer')) ? 'checked' : ''}}>
+                    <label>Option E</label>
+                    <input type="text" class="form-control{{ $errors->has('answer') ? ' has-error' : '' }}" name="ans[]" value="{{old('ans') ? old('ans')[4] : ''}}">
+                </div>
+
+                @if ($errors->has('answer'))
+                    <span class="error-block">
+                         <strong>{{ $errors->first('answer') }}</strong>
+                    </span>
+                @endif
+
+                @if ($errors->has('ans'))
+                    <span class="error-block">
+                         <strong>{{ $errors->first('ans') }}</strong>
+                    </span>
+                @endif
+                <div class="form-group{{ $errors->has('explanation') ? ' has-error' : '' }}">
+                    <label>Explanation (Optional)</label>
+                    <textarea class="form-control my-editor" name="explanation">{!! old('explanation') !!}</textarea>
+
+                    @if ($errors->has('explanation'))
+                        <span class="error-block">
+                             <strong>{{ $errors->first('explanation') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="form-group{{ $errors->has('hint') ? ' has-error' : '' }}">
+                    <label>Hint (Optional)</label>
+                    <textarea class="form-control my-editor" name="hint">{!! old('hint') !!}</textarea>
+
+                    @if ($errors->has('hint'))
+                        <span class="error-block">
+                             <strong>{{ $errors->first('hint') }}</strong>
+                        </span>
+                    @endif
                 </div>
 
                 <div class="form-group">
-                    <input type="checkbox" name="answer[0]" value="0">
-                    <label>OPtion A</label>
-                    <input type="text" class="form-control" name="ans[]">
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="answer[1]" value="1">
-                    <label>OPtion B</label>
-                    <input type="text" class="form-control" name="ans[]">
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="answer[2]" value="2">
-                    <label>OPtion C</label>
-                    <input type="text" class="form-control" name="ans[]">
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="answer[3]" value="3">
-                    <label>OPtion D</label>
-                    <input type="text" class="form-control" name="ans[]">
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="answer[4]" value="4">
-                    <label>OPtion E</label>
-                    <input type="text" class="form-control" name="ans[]">
-                </div>
-                <div class="form-group">
-                    <label>Explanation (Optional)</label>
-                    <textarea class="form-control my-editor" name="explanation"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Hint (Optional)</label>
-                    <textarea class="form-control my-editor" name="hint"></textarea>
+                    <label>Select Asset Files</label>
+                    <input type="file" class="form-control" name="asset_files[]" multiple>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>

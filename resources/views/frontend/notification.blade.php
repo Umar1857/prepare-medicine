@@ -7,7 +7,7 @@
             display: ruby;
         }
         .user-feedback{
-            margin-left: 25px;
+            margin: 25px 0;
         }
         .edit-btn{
             color: green;
@@ -35,20 +35,20 @@
 
 @endsection
 @section('content')
+<br>
 
     {{--  data fetch from Database !!  --}}
     
-    <div class="container">
+    <div class="container-fluid">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Notifications</p>
             </div>
         </div>
-        
-        <div class="row">
+        <div class="container">
+        <div class="row my-4 my-md-5 justify-content-center" style="padding-left: 45px; padding-right: 45px">
             <div class="well" style="width:100%">
-                <h4>Notifications</h4>
+            <h2 class="text-center mt-4 mb-sm-5 mb-4" style="font-size: 36px">Notifications</h2>
                 <br>
                @foreach ($data as $item)
                     <div class="list-group">
@@ -111,6 +111,7 @@
                     </div>
                 </div>
                 @endif
+            </div>
             </div>
         </div>
     </div>

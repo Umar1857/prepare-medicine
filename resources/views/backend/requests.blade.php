@@ -27,6 +27,7 @@
     </style>
 @endsection
 @section('content')
+<br>
 
 <div class="panel panel-white">
     <div class="panel-heading clearfix">
@@ -36,27 +37,40 @@
     <div class="panel-body">
         @include('msg.msg')
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered data_table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>User Name</th>
+                        <th>Email</th>
                         <th>For</th>
-                        <th>Request at</th>
+                        <th>Free User Type</th>
+                        <th>Requested at</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data as $key=>$item)
                         <tr>
+                            @php
+                            $user = \App\User::find($item->user_id);
+                            @endphp
                             <td scope="row">{{ $key+1 }}</td>
-                            <td >{{ $item->user_info->f_name }} {{ $item->user_info->s_name }}</td>
+                            <td >{{ $user ? $user->f_name : '' }} {{ $user ? $user->s_name : '' }}</td>
+                            <td >{{ $user ? $user->email : '' }}</td>
                             <td >Refugee Doctors Plan</td>
+                            <td >{{ $user ? $user->free_user_type : '' }}</td>
                             <td>{{ $item->created_at->format('d-m-y H:m') }}</td>
                             <td>
+                                @if(auth()->user()->can('Edit Request'))
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approvalModal{{ $item->id }}"
-                                        style="background: #2B3069; border:none;margin-right: 4px"><i class="fa fa-check"></i></button>
-                                <a onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm" href="{{ route('subscribers_requests_reject', $item->id) }}"><i class="fa fa-times"></i></a>
+                                        style="background: #2B3069; border:none;margin-right: 4px"><i class="fa fa-check"></i>
+                                </button>
+                                @endif
+
+                                @if(auth()->user()->can('Delete Request'))
+                                    <a onclick="return confirm('Are you sure?')" class="btn btn-danger btn-sm" href="{{ route('subscribers_requests_reject', $item->id) }}"><i class="fa fa-times"></i></a>
+                                @endif
                             </td>
                         </tr>
 

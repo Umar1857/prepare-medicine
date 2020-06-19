@@ -11,4 +11,8 @@ class categoty extends Model
     function cat_subcat(){
         return $this->hasMany(subcategory::class,'category_id','id');
     }
+
+    function ibank(){
+        return $this->hasMany(Ibank::class,'category_id','id');
+    }
 }

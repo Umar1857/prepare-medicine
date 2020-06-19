@@ -20,45 +20,49 @@ Route::get('/course-list/all',"CourseController@get_course_list")->name('allCour
 Auth::routes(['verify' => true]);
 // Start FrondEnd path
 
-    // home path
-    Route::get('/',"FrontendHomeController@Index")->name('root_page');
+// home path
+Route::get('/',"FrontendHomeController@Index")->name('root_page');
 
-    // About us path
-    Route::get('about-us',"FrontendAboutUsController@Index");
+// About us path
+Route::get('about-us',"FrontendAboutUsController@Index");
 
-    // Our team path
-    Route::get('our-team/volunteer',"FrontendOurTeamController@Volunteer");
-    Route::get('our-team/our-team',"FrontendOurTeamController@Index");
-    Route::get('our-team/plab-exam',"FrontendOurTeamController@PlabExam");
-    Route::get('our-team/plab-news',"FrontendOurTeamController@PlabNews");
-    // Route::get('our-team/feedback',"FrontendOurTeamController@Feedback");
-    // Route::get('our-team/feedback/edit/{id}',"FrontendOurTeamController@FeedbackEdit");
-    Route::get('our-team/useful-links-plab-1',"FrontendOurTeamController@LinksPlab1");
+/* Our Team Members Page */
+Route::get('team-members',"TeamController@ourTeam")->name('team-members');
+Route::get('team-details/{id}',"TeamController@teamMemberDetails")->name('team-details');
 
-    // Route::get('our-team/work-us',"FrontendOurTeamController@WorkUs");
-    Route::get('our-team/disclaimer',"FrontendOurTeamController@Disclaimer")->name('disclaimer.page');
-    Route::get('our-team/faq',"FrontendOurTeamController@FAQ");
+// Our team path
+Route::get('our-team/volunteer',"FrontendOurTeamController@Volunteer");
+Route::get('our-team/our-team',"FrontendOurTeamController@Index");
+Route::get('our-team/plab-exam',"FrontendOurTeamController@PlabExam");
+Route::get('our-team/plab-news',"FrontendOurTeamController@PlabNews");
+// Route::get('our-team/feedback',"FrontendOurTeamController@Feedback");
+// Route::get('our-team/feedback/edit/{id}',"FrontendOurTeamController@FeedbackEdit");
+Route::get('our-team/useful-links-plab-1',"FrontendOurTeamController@LinksPlab1");
 
-    //terms and condtions
-    Route::get('our-team/terms-conditions',"FrontendOurTeamController@terms_conditons")->name('termsConditions.page');
+// Route::get('our-team/work-us',"FrontendOurTeamController@WorkUs");
+Route::get('our-team/disclaimer',"FrontendOurTeamController@Disclaimer")->name('disclaimer.page');
+Route::get('our-team/faq',"FrontendOurTeamController@FAQ");
 
-    //Lab-value
-    Route::get('lab-value',"FrontendOurTeamController@LabValue");
+//terms and condtions
+Route::get('our-team/terms-conditions',"FrontendOurTeamController@terms_conditons")->name('termsConditions.page');
 
-    // Q-Bank / PMQ-Bank  path
-    Route::get('q-bank',"FrontendQBankController@Index");
+//Lab-value
+Route::get('lab-value',"FrontendOurTeamController@LabValue");
 
-    // Course path
-    Route::get('course',"FrontendCourseController@Index");
+// Q-Bank / PMQ-Bank  path
+Route::get('q-bank',"FrontendQBankController@Index");
 
-    // Course Material path
-    Route::get('course-material/webinars',"FrontendCourseMaterialController@Webinars")->name('webinars.page');
+// Course path
+Route::get('course',"FrontendCourseController@Index");
 
-    //UnderConstruction
-    Route::get('under-onstruction',"FrontendCourseController@UnderConstruction");
+// Course Material path
+Route::get('course-material/webinars',"FrontendCourseMaterialController@Webinars")->name('webinars.page');
 
-    //subscrition controller
-    Route::get('course-details/{courseName}',"SubscriptionController@course_details")->name('subscription_plans');
+//UnderConstruction
+Route::get('under-onstruction',"FrontendCourseController@UnderConstruction");
+
+//subscrition controller
+Route::get('course-details/{courseName}',"SubscriptionController@course_details")->name('subscription_plans');
 
 Route::group(['middleware' => ['auth','verified'] ], function () {
 
@@ -182,8 +186,27 @@ Route::group(['middleware' => ['auth','verified'] ], function () {
     Route::get('account/change-password',"ChangePasswordController@Index");
     Route::post('change-password',"ChangePasswordController@Change");
 
+    Route::get('contact-us', 'ContactController@contactus')->name('contact-us');
+    Route::post('contact', 'ContactController@store')->name('contact');
+
+    Route::resource('ticket', 'TicketController');
+    Route::get('tickets', 'TicketController@backendIndex')->name('admin-tickets');
+    Route::get('ticket-status/{id}', 'TicketController@updateStatus')->name('ticket-status');
+    Route::get('view-ticket/{id}', 'TicketController@showTicket')->name('view-ticket');
+
+    /*=========== IMAGE BANK ===========*/
+    Route::get('i-bank/image-bank', 'ImageBankController@imageBank')->name('image-bank');
+    Route::get('i-bank/image-bank-gallery/{id}', 'ImageBankController@imageBankGallery')->name('image-bank-gallery');
+    Route::get('i-bank/image-bank-gallery-detail/{id}', 'ImageBankController@imageBankGalleryDetail')->name('image-bank-gallery-detail');
+
+    /*=========== VIDEO BANK ===========*/
+    Route::get('i-bank/video-bank', 'VideoBankController@videoBank')->name('video-bank');
+    Route::get('i-bank/video-bank-gallery/{id}', 'VideoBankController@videoBankGallery')->name('video-bank-gallery');
+    Route::get('i-bank/video-bank-gallery-detail/{id}', 'VideoBankController@videoBankGalleryDetail')->name('video-bank-gallery-detail');
+
 });
-Route::get('action-x-csa/action-x-e/{accessToken}', function($token){
+
+/*Route::get('action-x-csa/action-x-e/{accessToken}', function($token){
     if($token === "xx-df12312378978900xcda_dr_csa"){
         $root_path =  base_path();
         $public_path = "/home/kohin837/public_html/preparemedicine.com";
@@ -202,7 +225,7 @@ Route::get('action-x-csa/action-x-e/{accessToken}', function($token){
     }else{
         return "Access Denied !! You should back now....";
     }
-});
+});*/
 
 // end FrondEnd path
 
@@ -232,25 +255,27 @@ Route::group(['middleware' => ['auth','role','verified'] ], function () {
     // Route::get('admin/feedback/show/{id}',"AdminFeedbackController@Show");
     // category and subcategory path
     Route::get('admin/category',"AdminCategoryController@Index");
-    Route::get('admin/sub-category',"AdminSubctegoryController@Index");
+//    Route::get('admin/sub-category',"AdminSubctegoryController@Index");
     Route::post('admin/category/add',"AdminCategoryController@Add");
-    Route::post('admin/sub-category/add',"AdminSubctegoryController@Add");
+//    Route::post('admin/sub-category/add',"AdminSubctegoryController@Add");
     Route::get('admin/category/drop/{id}',"AdminCategoryController@Drop");
-    Route::get('admin/sub-category/drop/{id}',"AdminSubctegoryController@Drop");
+//    Route::get('admin/sub-category/drop/{id}',"AdminSubctegoryController@Drop");
     Route::post('admin/category/add/update/{id}',"AdminCategoryController@Update");
-    Route::post('admin/sub-category/update/{id}',"AdminSubctegoryController@Update");
+//    Route::post('admin/sub-category/update/{id}',"AdminSubctegoryController@Update");
     // Admin question path
 
     // Single Question path
     Route::get('admin/question/single',"QuestionController@SingleIndex");
     Route::get('admin/question/add/single',"QuestionController@AddSingle");
     Route::post('admin/question/add/single',"QuestionController@Single");
+    Route::get('admin/question/edit/single/{id}',"QuestionController@getEditSingle")->name('edit_question');
     Route::post('admin/question/edit/single',"QuestionController@EditSingle");
 
     // Multiple Question path
     Route::get('admin/question/multi',"QuestionController@MultiIndex");
     Route::get('admin/question/add/multi',"QuestionController@AddMulti");
     Route::post('admin/question/add/multi',"QuestionController@Multi");
+    Route::get('admin/question/edit/multi/{id}',"QuestionController@getEditMulti")->name('edit_multi_question');
     Route::post('admin/question/edit/multi',"QuestionController@EditMulti");
 
     //drop any question
@@ -321,15 +346,71 @@ Route::group(['middleware' => ['auth','role','verified'] ], function () {
     Route::get('admin/subscription/requests',"SubscriptionController@subscribers_requests")->name('subscribers_requests');
     Route::post('admin/subscription/requests-approve',"SubscriptionController@subscribers_requests_approve")->name('subscribers_requests_approve');
     Route::get('admin/subscription/requests-reject/{id}',"SubscriptionController@subscribers_requests_reject")->name('subscribers_requests_reject');
+    Route::get('admin/subscription/edit-subscriber/{id}',"SubscriptionController@editSubscriber")->name('edit_subscriber');
+    Route::post('admin/subscription/update-subscriber/{id}',"SubscriptionController@updateSubscriber")->name('update_subscriber');
+    Route::get('admin/subscription/subscriber-status/{id}',"SubscriptionController@subscriberStatus")->name('subscriber_status');
+    Route::get('admin/subscription/delete-subscriber/{id}',"SubscriptionController@deleteSubscriber")->name('subscriber_delete');
 
     //blog posts
     Route::resource('admin/ui/blog', 'BlogController');
+    Route::resource('admin/ui/role', 'RoleController');
+    Route::resource('admin/ui/permission', 'PermissionController');
+    Route::resource('admin/ui/user', 'UserController');
+    Route::resource('admin/ui/team-members', 'TeamController');
+    Route::resource('admin/ui/subscriptions', 'SubscriptionPlanController');
+    Route::resource('admin/ui/contact', 'ContactController');
+    Route::get('admin/ui/contact-status/{id}', 'ContactController@updateStatus')->name('contact-status');
     Route::resource('admin/ui/course-list', 'CourseController');
+    Route::resource('admin/ui/events', 'EventController');
+    Route::resource('admin/ui/plab-courses', 'PlabCourseController');
+    Route::resource('admin/ui/webinars', 'WebinarController');
+    Route::resource('admin/ui/image-bank', 'ImageBankController');
+    Route::resource('admin/ui/video-bank', 'VideoBankController');
 
     //blog news
     Route::resource('admin/ui/news', 'NewsController');
+    Route::post('admin/ui/news-images-upload', 'NewsController@imageUpload')->name('image_upload');
 });
+
+Route::get('question/view/{id}', "QuestionController@viewFile")->name('view_file');
 
 // end backend or admin pannel path
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('events', 'EventController@getEvents')->name('getEvents');
+Route::get('event-detail/{id}', 'EventController@getEventDetail')->name('getEventDetail');
+
+Route::get('plab-courses', 'PlabCourseController@getPlabCourses')->name('getCourses');
+Route::get('plab-course-details/{id}', 'PlabCourseController@getCourseDetail')->name('getCourseDetail');
+
+Route::get('webinars', 'WebinarController@getWebinars')->name('getWebinar');
+Route::get('webinar-details/{id}', 'WebinarController@getWebinarDetail')->name('getWebinarDetail');
+
+/*==================================================*/
+/* CLEAR CACHE COMMANDS */
+
+Route::get('/route-cache', function() {
+    $exitCode = Artisan::call('route:cache');
+    return 'Routes cache cleared';
+});
+
+Route::get('/config-clear', function() {
+    $exitCode = Artisan::call('config:clear');
+    return 'Config cache cleared';
+});
+
+Route::get('/config-cache', function() {
+    $exitCode = Artisan::call('config:cache');
+    return 'Config cache cleared';
+});
+
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('cache:clear');
+    return 'Application cache cleared';
+});
+
+Route::get('/view-clear', function() {
+    $exitCode = Artisan::call('view:clear');
+    return 'View cache cleared';
+});

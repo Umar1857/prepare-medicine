@@ -15,6 +15,7 @@
 @endsection
 
 @section('content')
+<br>
 
 
 @if(Auth::user()->role == 2 || 
@@ -22,9 +23,8 @@
 	Auth::user()->role == 5 ||
 	Auth::user()->role == 6
 )
-	<div class="container text-center" style="margin-bottom: 100px">
+	<div class="container-fluid" style="margin-bottom: 100px">
 	    <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Plab two</p>
             </div>

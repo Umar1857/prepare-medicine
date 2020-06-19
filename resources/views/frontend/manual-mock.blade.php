@@ -14,28 +14,31 @@
 
 
 @section('content')
+<br>
 {{--  data fetch from Database !!  --}}
-<div class="container-fluid" style="padding-left: 30px; padding-right: 30px">
+<div class="container-fluid">
     <div class='page_banner_img_common'>
         <img src='/frontend/images/pages-banner.png' class='img-fluid'>
         <div class='overlay__'>
             <p>Manual Mock</p>
         </div>
     </div>
-    
-    <h2 style="font-size: 30px;text-align: center;">MANUAL MOCK</h2>
-    <p class="text-justify">
-        Choose questions to be included by specialities for your own unique 180-MCQ exam 
-    <br>
-        These questions are timed as well but are random in the sense that they have been selected from across the specialities just like in the real PLAB 1’
-    </p>
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
 
-    <div class="row" style="padding-left: 30px; padding-right: 30px">
+    <div class="container">
+
+    <h2 class="text-center mt-4 mb-sm-5 mb-4" style="font-size: 36px;">MANUAL MOCK</h2>
+
+        <p class="text-center">Choose questions to be included by specialities for your own unique 180-MCQ exam .These questions are timed as well but are random in the sense that they have been selected from across the specialities just like in the real PLAB 1’
+        </p>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
+
+
+    <div class="row my-4 my-md-5" style="padding-left: 30px; padding-right: 30px">
         @foreach ($expired_data as $key => $item)
             @if ($key%4 == '0')
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
@@ -67,7 +70,7 @@
                     </div>
             @endif
         @endforeach
-    
+
 
     @if($exists_data != '0')
         @foreach ($continue_data as $item)
@@ -90,39 +93,46 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Choose Specialties</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul class="nav nav-tabs md-tabs" id="myTabMD" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab-md" data-toggle="tab" href="#home-md" role="tab" aria-controls="home-md" aria-selected="true">Specialities</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content card p-3" id="myTabContentMD">
-                        <div class="tab-pane fade show active" id="home-md" role="tabpanel" aria-labelledby="home-tab-md">
-                            {{-- Categories --}}
-                            <form action="{{ url('q-bank/manual') }}" method="get">
-                                <input type="hidden" value="cat" name="type">
-                                @foreach ($cat as $item)
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="cat{{ $item->id }}" value="{{ $item->id }}" name="search[]">
-                                        <label class="custom-control-label" for="cat{{ $item->id }}">{{ $item->name }}</label>
-                                    </div>
-                                @endforeach
-                                <input type="submit" value="Continue" class="btn btn-success bg-success" style="float:right;border-radius: 4px">
-                            </form>
+                <div class="modal-content">
+                    <form action="{{ url('q-bank/manual') }}" method="get">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Choose Specialties</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-tabs md-tabs" id="myTabMD" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab-md" data-toggle="tab" href="#home-md" role="tab" aria-controls="home-md" aria-selected="true">Specialities</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content card p-3" id="myTabContentMD">
+                                <div class="tab-pane fade show active" id="home-md" role="tabpanel" aria-labelledby="home-tab-md">
+                                    {{-- Categories --}}
+                                    <input type="hidden" value="cat" name="type">
+                                    @foreach ($cat as $item)
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="cat{{ $item->id }}" value="{{ $item->id }}" name="search[]">
+                                            <label class="custom-control-label" for="cat{{ $item->id }}">{{ $item->name }}</label>
+                                        </div>
+                                    @endforeach
+                                    {{--<hr>
+                                    <input type="radio" name="question_type" value="">Wrong Answered
+                                    <input type="radio" name="question_type" value="">Right Answered
+                                    <input type="radio" name="question_type" value="">Right Answered--}}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div style="display: inline-block;float: right;text-align: right">
+                                <button type="button" class="btn btn-danger bg-danger mr-2" data-dismiss="modal">Exit</button>
+                                <input type="submit" value="Create New Mock" class="btn btn-success bg-success" style="float:right;border-radius: 4px">
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn existBTN" data-dismiss="modal">Exit</button>
-                </div>
-            </div>
             </div>
         </div>
     @endif

@@ -28,6 +28,7 @@
     </style>
 @endsection
 @section('content')
+<br>
 
 <div class="panel panel-white">
     @if ($errors->any())
@@ -47,28 +48,39 @@
     <div class="panel-heading clearfix">
         <h4 class="panel-title">Question</h4>
     </div>
-    <div class="panel-heading clearfix btn-left">
-        <a class="btn btn-info" href="{{ url('admin/question/single') }}">show singlechoice Question</a>
-        <a class="btn btn-info" href="{{ url('admin/question/multi') }}">Show multichoice question</a>
-    </div>
-    <div class="panel-heading clearfix btn-right">
-        <a class="btn btn-info" href="{{ url('admin/question/add/single') }}">Add Question(Single Answer )</a>
-        <a class="btn btn-info" href="{{ url('admin/question/add/multi') }}">Add Question(Multi Answer )</a>
-    </div>
-    <br><br><br>
-    <div style="clear:both">
-        <div class="col-12">
-            <p>Mock Upload Multi type Question</p>
-            <form class="form-inline" method="post" action="{{ url('admin/question/import') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label for="pwd">Excel File</label>
-                    <input type="file" class="form-control" id="pwd" name="excel">
+
+        @if(auth()->user()->can('View Question'))
+            <div class="panel-heading clearfix btn-left">
+                <a class="btn btn-info" href="{{ url('admin/question/single') }}">show singlechoice Question</a>
+                <a class="btn btn-info" href="{{ url('admin/question/multi') }}">Show multichoice question</a>
+            </div>
+        @endif
+
+
+        @if(auth()->user()->can('Create Question'))
+            <div class="panel-heading clearfix btn-right">
+                <a class="btn btn-info" href="{{ url('admin/question/add/single') }}">Add Question(Single Answer )</a>
+                <a class="btn btn-info" href="{{ url('admin/question/add/multi') }}">Add Question(Multi Answer )</a>
+            </div>
+        @endif
+
+        <br><br><br>
+
+        @if(auth()->user()->can('Create Question'))
+            <div style="clear:both">
+                <div class="col-12">
+                    <p>Mock Upload Multi type Question</p>
+                    <form class="form-inline" method="post" action="{{ url('admin/question/import') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="pwd">Excel File</label>
+                            <input type="file" class="form-control" id="pwd" name="excel">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-        </div>
-    </div>
+            </div>
+        @endif
     <br><br>
     <div class="panel-body">
         <div class="table-responsive">
@@ -81,6 +93,16 @@
                         <option value="key">Keyword(from question)</option>
                     </select>
                 </div>
+
+                <div class="form-group mx-sm-2 mb-2">
+                    <select class="form-control" name="category">
+                        <option value="">Select A Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+
+                    </select>
+                </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="inputPassword2" class="sr-only">Search</label>
                     <input type="text" class="form-control" id="inputPassword2" name="sear_key" placeholder="category/search id/question">
@@ -89,6 +111,14 @@
             </form>
 
             <form action="{{ url('admin/question/select') }}" method="post">
+
+                @if(auth()->user()->can('Delete Question'))
+                    <div>
+                        <input type="checkbox" class="select-all"> Select All
+                        <input type="submit" value="Delete" class="btn btn-danger select-all-delete ml-2">
+                    </div>
+                @endif
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -123,106 +153,24 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a data-toggle="modal" data-target="#EditCat{{ $item->id }}"><i class="fa fa-edit edit"></i></a>
-                                    <a href="{{ url('admin/question/drop/'.$item->id) }}"><i class="fa fa-remove delete"></i></a>
+                                    @if(auth()->user()->can('Edit Question'))
+                                        <a href="{{route('edit_multi_question', $item->id)}}"><i class="fa fa-edit edit"></i></a>
+                                    @endif
+
+                                    @if(auth()->user()->can('Delete Question'))
+                                        <a href="{{ url('admin/question/drop/'.$item->id) }}"><i class="fa fa-remove delete delete-btn"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
                 @csrf
-                <input type="submit" value="Delete" class="btn btn-danger">
             </form>
             <span style="float:right"> {{ $data->links() }}</span>
         </div>
     </div>
 </div>
-@foreach ($data as $key=>$item)
-    <!-- Modal -->
-    <div class="modal fade" id="EditCat{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-
-
-                    <form action="{{ url('admin/question/edit/multi') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $item->id }}">
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select class="select-2 form-control" name="category">
-                                @foreach ($category as $value)
-                                    @if ($item->subcat_id == $value->id)
-                                        <option selected value="{{ $value->id }}" >{{ $value->name }}</option>
-                                    @else
-                                        <option value="{{ $value->id }}" >{{ $value->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Question Id</label>
-                            <input class="form-control" name="search_id" value="{!! $item->search_id !!}">
-                        </div>
-                        <div class="form-group">
-                            <label>Enter Question</label>
-                            <textarea class="form-control my-editor" name="question">{!! $item->question !!}</textarea>
-                        </div>
-                            @foreach($item->question_ans as $keys=>$value)
-                                @if($keys == '0')
-                                    <div class="form-group">
-                                        <input type="checkbox" name="answer[]" id="answer0{{ $key }}" value="0">
-                                        <label>OPtion A</label>
-                                        <input type="text" class="form-control" name="ans[]" value="{{ $value->ans ?? ''}}">
-                                    </div>
-                                @elseif($keys == '1')
-                                    <div class="form-group">
-                                        <input type="checkbox" name="answer[]" id="answer1{{ $key }}" value="1">
-                                        <label>OPtion B</label>
-                                        <input type="text" class="form-control" name="ans[]" value="{{ $value->ans ?? ''}}">
-                                    </div>
-                                @elseif($keys == '2')
-                                    <div class="form-group">
-                                        <input type="checkbox" name="answer[]" id="answer2{{ $key }}" value="2">
-                                        <label>OPtion C</label>
-                                        <input type="text" class="form-control" name="ans[]" value="{{ $value->ans ?? ''}}">
-                                    </div>
-                                @elseif($keys == '3')
-                                    <div class="form-group">
-                                        <input type="checkbox" name="answer[]" id="answer3{{ $key }}" value="3">
-                                        <label>OPtion D</label>
-                                        <input type="text" class="form-control" name="ans[]" value="{{ $value->ans ?? ''}}">
-                                    </div>
-                                @elseif($keys == '4')
-                                    <div class="form-group">
-                                        <input type="checkbox" name="answer[]" id="answer4{{ $key }}" value="4">
-                                        <label>OPtion E</label>
-                                        <input type="text" class="form-control" name="ans[]" value="{{ $value->ans ?? ''}}">
-                                    </div>
-                                @endif
-                            @endforeach
-                        <div class="form-group">
-                            <label>Explanation (Optional)</label>
-                            <textarea class="form-control my-editor" name="explanation">{!! $item->explanation !!}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Hint (Optional)</label>
-                            <textarea class="form-control my-editor" name="hint">{!! $item->hint !!}</textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endforeach
 
 @endsection
 
@@ -278,6 +226,6 @@
 
         tinymce.init(editor_config);
     </script>
-    
+
 @endsection
 

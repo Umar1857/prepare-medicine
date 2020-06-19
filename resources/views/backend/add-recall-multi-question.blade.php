@@ -12,6 +12,7 @@
     </style>
 @endsection
 @section('content')
+<br>
 
     <div class="panel panel-white">
         @if ($errors->any())

@@ -16,12 +16,12 @@
 
 @endsection
 @section('content')
+<br>
 
     {{--  data fetch from Database !!  --}}
     <br>
-    <div class="container">
+    <div class="container-fluid">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Feedback</p>
             </div>
@@ -29,7 +29,7 @@
         
         <div class="row">
             <div class="well">
-                <h2 class="text-center">Feedback</h2>
+                <h2 class="text-center mb-5">Feedback</h2>
                 <br>
                 @foreach ($data as $item)
                     <div class="list-group">

@@ -26,15 +26,34 @@
 @endsection
 
 @section('content')
+<br>
     <br>
-    <div class="container">
-        <h3 class="heading_">{{ $data->title }}</h3>
+        <div class="container">
+            <h3 class="heading_">{{ $data->title }}</h3>
 
-        <div class="text-center" style="margin-bottom: 30px"> 
-            <img src="{{ url('storage/blog/'.$data->featured_img) }}">
+            <div class="text-center" style="margin-bottom: 30px">
+                <img src="{{ url('storage/news/'.$data->featured_img) }}">
+            </div>
+
+            <?php echo $data->description; ?>
+
+            @if(!empty($files))
+            <div>
+                <p class="text-uppercase" style="margin-left: -15px;font-weight:bold;font-size:16px">REFERENCE FILES</p>
+                @foreach($files as $file)
+                    @if(in_array($file->type, array('pdf', 'jpeg', 'jpg', 'png')))
+                        <div><a href="{{route('view_file', $file->id)}}" target="_blank">{{$file->name}}</a></div>
+                    @elseif($file->type === 'mp4')
+                        {{--<video width="320" height="240" controls>
+                            <source src="{{URL::asset("/storage/app/public/questions/".$item->id.'/'.$file->name)}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>--}}
+
+                        {!! $file->path !!}
+                    @endif
+                @endforeach
+            </div>
         </div>
-
-        <?php echo $data->description; ?>
-    </div>  
+    @endif
     <br><br>
 @endsection

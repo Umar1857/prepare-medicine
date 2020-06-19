@@ -15,11 +15,12 @@
 @endsection
 
 @section('content')
+<br>
 
     <div class="alert alert-info" role="alert">Edit Course</div>
     @include('msg.msg')
 
-    <form action="{{ route('course-list.update', $data->id) }}" method="post" enctype="multipart/form-data">
+    <form class="custom_form" action="{{ route('course-list.update', $data->id) }}" method="post" enctype="multipart/form-data">
         @method('PUT')
         @csrf
         <label><bTitle</b></label>
@@ -36,7 +37,12 @@
         <label><b>Featured Image</b></label>
         <input id="featured_img" type="file" name="featured_img" accept="image/*">
         <br>
-        <input type="submit" class="btn btn_custom_style" value="UPDATE" style="float:right">
+
+        <div class="form-group">
+            <label><b>Add Files</b></label>
+            <input type="file" name="reference_files[]" multiple>
+        </div>
+        <input type="submit" class="btn btn_custom_style btn-primary" value="UPDATE COURSE" style="float:right">
     </form>
 
     <div class="row">

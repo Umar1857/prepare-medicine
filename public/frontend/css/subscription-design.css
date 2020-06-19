@@ -13,100 +13,73 @@
 	    color: #fff;
 	}
 
-	.plans_area{
-		background: rgb(119,119,119);
-		background: radial-gradient(circle, rgba(119,119,119,1) 8%, rgba(153,153,153,1) 27%, rgba(221,221,221,1) 60%, rgba(153,153,153,1) 94%);
-        box-sizing: border-box;
-        /*box-shadow: 0px 0px 12px 7px #777;*/
-	}
-	.plans_area .single_plan .card{
-		background: transparent !important;
-		/*margin-top: 35px*/
-	}
+
 	.single_plan{
 		margin-bottom: 25px;
-		text-align: center !important;
-		padding:5px;
+		-webkit-perspective: 1000px;
+		perspective: 1000px;
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
 	}
 	.single_plan .card{
-		border: none;
-	}
-	.single_plan .card .icon{
-		padding: 0px;
-	    text-align: center;
-	    position: relative;
-	}
-
-	.single_plan .card .icon img{
-		box-sizing: border-box;
-        box-shadow: 0px 0px 10px 7px #999;
-        padding: 10px;
-        border-radius: 5px;
-        height:520px;
-	}
-	.single_plan .card .icon form{
-	    position: absolute;
-	    right: 15%;
-	    bottom: 19%;
-	}
-	.single_plan .card .icon p{
-		position: absolute;
-	    right: 15%;
-	    bottom: 19%;
+		background-color: #fff;
+		border-radius: 10px;
+		overflow: hidden;
+		position: relative;
+		transition: all .3s ease-in;
+		-webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+		/* box-shadow: 0 0 10px 5px rgba(150, 144, 144, 0.5); */
+		
+    box-shadow: 0 20px 20px rgba(50,50,50,.2);
 	}
 
-	.single_plan .subscribe_button_one{
-		background: rgb(254,199,61);
-		background: -moz-linear-gradient(90deg, rgba(254,199,61,1) 15%, rgba(251,167,53,1) 45%, rgba(221,221,221,1) 92%);
-		background: -webkit-linear-gradient(90deg, rgba(254,199,61,1) 15%, rgba(251,167,53,1) 45%, rgba(221,221,221,1) 92%);
-		background: linear-gradient(90deg, rgba(254,199,61,1) 15%, rgba(251,167,53,1) 45%, rgba(221,221,221,1) 92%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fec73d",endColorstr="#dddddd",GradientType=1);
+	.single_plan .card .price-header{
+		padding: 20px 20px 40px;
+		background-color: #2A306C;
+		transition: all .3s ease-in;
+		clip-path: polygon(0 0, 100% 0%, 100% 65%, 0 100%);
 	}
-	.single_plan .subscribe_button_two{
-		background: rgb(57,193,81);
-		background: -moz-linear-gradient(90deg, rgba(57,193,81,1) 15%, rgba(39,186,84,1) 45%, rgba(221,221,221,1) 92%);
-		background: -webkit-linear-gradient(90deg, rgba(57,193,81,1) 15%, rgba(39,186,84,1) 45%, rgba(221,221,221,1) 92%);
-		background: linear-gradient(90deg, rgba(57,193,81,1) 15%, rgba(39,186,84,1) 45%, rgba(221,221,221,1) 92%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#39c151",endColorstr="#dddddd",GradientType=1);
+	.single_plan .card .price-header h3{
+		text-align: center;
+		color: #fff;
+		margin-bottom: 0;
 	}
-	.single_plan .subscribe_button_three{
-		background: rgb(0,145,231);
-		background: -moz-linear-gradient(90deg, rgba(0,145,231,1) 15%, rgba(221,221,221,1) 45%, rgba(0,184,234,1) 92%);
-		background: -webkit-linear-gradient(90deg, rgba(0,145,231,1) 15%, rgba(221,221,221,1) 45%, rgba(0,184,234,1) 92%);
-		background: linear-gradient(90deg, rgba(0,145,231,1) 15%, rgba(221,221,221,1) 45%, rgba(0,184,234,1) 92%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0091e7",endColorstr="#00b8ea",GradientType=1);
+	.price-value{
+		font-size: 30px;
+		margin: 0 auto 30px;
+	}
+	.price-value strong{
+		display: block;
+	}
+	.single_plan .card .price-content{
+		text-align: center;
+		padding: 30px;
+	}
+	.single_plan .card .price-content ul{
+		margin: 0 auto 20px;
+	}
+	.single_plan .card .price-content ul li{
+		font-weight: bold;
+		padding: 5px 0;
+	}
+	.single_plan:hover .card{
+		-webkit-transform: rotateX(20deg);
+		transform: rotateX(20deg);
 	}
 
-   .single_plan .subscribe_button{
-	    border-radius: 3px !important;
-	    font-weight: normal;
-	    border: none;
-	    padding: 3px 5px
-   	}
-   	.single_plan .subscribe_button:hover{
-   		box-shadow: 1px 4px 7px 2px #777;
-   		transform: scale(1.1);
-   		transition: .5s
-   	}
-   	.single_plan .extra_btn{
-   		right: 14%;
-   	}
-   	
-   	
-   	
-   	
    	
    	@media only screen and (max-width: 767px) {
-      .single_plan .card .icon form,
-      .single_plan .card .icon p{
+      .single_plan .card form,
+      .single_plan .card p{
     	    right: 25%;
       }
       
     }
     
     @media only screen and (max-width: 470px) {
-      .single_plan .card .icon form,
-      .single_plan .card .icon p{
+      .single_plan .card form,
+      .single_plan .card p{
     	    right: 20%;
       }
       

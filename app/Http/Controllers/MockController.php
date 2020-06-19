@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class MockController extends Controller
 {
     function Random(){
-        
+
         if(Auth::user()->role == 1 || Auth::user()->role == 4){
             //not verified or admin
             return back();
@@ -28,8 +28,8 @@ class MockController extends Controller
                     return redirect('q-bank/random/exam/'.$value->id);
                 }
             }
-            
-            
+
+
             $exam_time__ = NULL;
             $fetch_question = NULL;
             if (Auth::user()->role == 2) {
@@ -48,7 +48,7 @@ class MockController extends Controller
                     return back()->with('error',"Insufficient Questions For Exam");
                 }
             }
-            
+
 
             $exam_id = time();
             $user_id = Auth::user()->id;
@@ -81,7 +81,7 @@ class MockController extends Controller
     }
 
     function Manual(Request $request){
-        
+
         if(Auth::user()->role == 1 || Auth::user()->role == 4){
             //no access for non-verified and admin
             return back();
@@ -90,9 +90,9 @@ class MockController extends Controller
             return redirect()->back()
                     ->with('no_access_permission__', 'You can not access, please upgrade your plan');
         }
-        
-        
-        
+
+
+
         if (Auth::user()->role >= 3 && Auth::user()->expeir_date > date('Y-m-d')) {
             $continue_data = mockinformation::select()->where('user_id',Auth::user()->id)->where('status','1')->get();
             $exists_data = mockinformation::where('user_id',Auth::user()->id)->where('status','1')->where('type',"2")->count();
@@ -105,9 +105,9 @@ class MockController extends Controller
             $fetch_question = NULL;
             if ($request->type == 'cat') {
                 if( !empty(question::whereIn('cat_id',$request->search)->get()->toArray()) && question::whereIn('cat_id',$request->search)->count() >= 180){
-                   
+
                     $fetch_question = question::whereIn('cat_id',$request->search)->get()->random(180);
-                    
+
                 }else{
                     return back()->with('error',"Insufficient Questions in your Selected Categories");
                 }
@@ -217,10 +217,14 @@ class MockController extends Controller
 
     function FinishExam($user_id,$mock_id){
 
+        $mock = mockinformation::find($mock_id);
+
         if(Auth::user()->id == $user_id){
+            $count = mockinformation::where('user_id', $user_id)->where('type', $mock->type)->count();
             mockinformation::findOrFail($mock_id)->update([
                 'time' => '0',
                 'status' => "2",
+                'position' => $count,
             ]);
 
             return back();

@@ -25,3 +25,56 @@
 	$("[data-toggle='tooltip']").tooltip();
 
 })();
+
+/*=========================================================================================*/
+/* Custom JS */
+
+$(document).ready(function(){
+
+    $('.data_table').DataTable({
+        "paging": false,
+        language: {
+            searchPlaceholder: "Search Here..."
+        }
+    });
+
+    $(".select-all").bind("click", function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+    /* Script for Delete Prompt */
+    $(".delete-btn").bind("click", function(e){
+        e.preventDefault();
+        var href = $(this).attr('href');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                window.location.replace(href);
+            }
+        })
+    });
+
+    $(".delete-submit-btn").bind("click", function(e){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $(this).parent('form').submit();
+            }
+        })
+    });
+});

@@ -27,19 +27,24 @@
     </style>
 @endsection
 @section('content')
+<br>
 
 <div class="panel panel-white">
     <div class="panel-heading clearfix">
         <h4 class="panel-title">Courses</h4>
     </div>
-    <div class="panel-heading clearfix btn-left">
-        <a href="{{ route('course-list.create') }}" class="btn btn-sencodary">Add Course</a>
-    </div>
+
+    @if(auth()->user()->can('Create Course'))
+        <div class="panel-heading clearfix btn-left">
+            <a href="{{ route('course-list.create') }}" class="btn btn-sencodary">Add Course</a>
+        </div>
+    @endif
+
     <br><br>
     <div class="panel-body">
         @include('msg.msg')
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-bordered data_table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -59,26 +64,18 @@
                             <td ><?php echo str_limit($item->description, 50); ?></td>
                             <td><img src="{{ url('storage/course/'.$item->featured_img) }}" alt="" style="width:100px"></td>
                             <td>
-                                <a href="{{ route('course-list.edit', $item->id) }}" style="background-color: #0A68D4; color: #fff; border: none;" class="btn btn-sm"><i class="fa fa-edit edit"></i></a>
-                                
-                                <!-- delete code start from here -->
-                                <form style="display:none;" id="delete-form-{{ $item->id }}" action="{{ route('course-list.destroy', $item->id) }}" method="post">
-                                  @method('DELETE')
-                                  @csrf
-                                </form>
+                                @if(auth()->user()->can('Edit Course'))
+                                    <a href="{{ route('course-list.edit', $item->id) }}" style="background-color: #0A68D4; color: #fff; border: none;" class="btn btn-sm"><i class="fa fa-edit edit"></i></a>
+                                @endif
 
-                                <button type="button" style="background-color: red; color: #fff; border: none;" class="btn btn-sm"
-                                  onclick="if(confirm('Are you sure to Delete?')){
-                                    event.preventDefault();
-                                    document.getElementById('delete-form-{{ $item->id }}').submit();
-                                  }else{
-                                    event.preventDefault();
-                                  }"
-                                >
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                <!-- delete code end from here -->
-                                
+                                @if(auth()->user()->can('Delete Course'))
+                                    <form method="post" class="delete-form" action="{{ route('course-list.destroy', $item->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="button" style="background-color: red; color: #fff; border: none;" class="btn btn-sm delete-submit-btn"><i class="fa fa-remove"></i></button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

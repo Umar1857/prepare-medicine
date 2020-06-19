@@ -1,7 +1,8 @@
 @extends('frontend.master-frontend')
 @section('content')
+<br>
 
-<div class='container' style="padding-left: 35px; padding-right: 35px">
+<div class='container-fluid'>
     
     <div class='page_banner_img_common'>
         <img src='/frontend/images/pages-banner.png' class='img-fluid'>
@@ -10,12 +11,14 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="container">
+        <div class="row align-items-stretch">
+
         @if(!$blogs->isEmpty())
         @foreach($blogs as $key=>$blog)
-            <div class="col-lg-4  col-md-6 col-12">
+            <div class="align-self-stretch col-lg-4 col-md-6 col-12">
                 <!-- single-courses -->
-                <div class="single-our-blog mt--30">
+                <div class=" single-our-blog mt--30">
                     <div class="our-blog-image">
                         <a href="#"><img src="{{ url('storage/blog/'.$blog->featured_img) }}" alt=""></a>
                         <span class="in-our-blog-icon">
@@ -43,6 +46,8 @@
             </div>
         @endforeach
     @endif
+    </div>
+
     </div>
     
     <div class='col-12'>

@@ -7,7 +7,7 @@
             display: ruby;
         }
         .user-name-show{
-            color:green;
+            color:#63BA52;
             display: ruby;
         }
         .user-feedback{
@@ -48,6 +48,7 @@
 @endsection
 @section('content')
 <br>
+<br>
 
 
 @if(Auth::user()->role == 2 || 
@@ -57,7 +58,6 @@
 )
     <div class="container text-center" style="margin-bottom: 100px">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Video Lectures</p>
             </div>

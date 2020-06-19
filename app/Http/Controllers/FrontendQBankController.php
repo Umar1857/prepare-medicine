@@ -17,7 +17,7 @@ class FrontendQBankController extends Controller
     }
 
     function RevisionCategory(){
-        
+
         $data = categoty::orderBy('id', 'ASC')
                         ->paginate(30);
 
@@ -40,14 +40,14 @@ class FrontendQBankController extends Controller
         return view('frontend.flagged-questions',['data'=>$data]);
     }
 
-    function RandomMock(){           
+    function RandomMock(){
 
         $exists_data = mockinformation::where('user_id',Auth::user()->id)
                             ->where('status','1')
                             ->where('type','1')
                             ->count();
 
-        
+
         $continue_data = $expired_data = NULL;
 
         $continue_data = mockinformation::orderBy('id', 'DESC')
@@ -59,7 +59,7 @@ class FrontendQBankController extends Controller
                             ->where('user_id',Auth::user()->id)
                             ->where('status','2')->where('type','1')
                             ->get();
-        
+
 
         return view('frontend.random-mock',['expired_data'=>$expired_data,'continue_data'=>$continue_data,'exists_data'=>$exists_data]);
     }
@@ -73,8 +73,8 @@ class FrontendQBankController extends Controller
             return redirect()->back()
                 ->with('no_access_permission__', 'You can not access, please upgrade your plan');
         }
-        
-        
+
+
         $exists_data = mockinformation::where('user_id',Auth::user()->id)->where('status','1')->where('type','2')->count();
         $continue_data = $expired_data = $cat = NULL;
 
@@ -89,7 +89,7 @@ class FrontendQBankController extends Controller
                         ->where('status','2')
                         ->where('type','2')
                         ->get();
-        
+
 
         return view('frontend.manual-mock',['expired_data'=>$expired_data,'continue_data'=>$continue_data,'exists_data'=>$exists_data,'cat'=>$cat]);
     }

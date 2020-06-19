@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Session;
 use Stripe;
 use Auth;
@@ -12,7 +13,7 @@ use Carbon\Carbon;
 
 class SubscriptionController extends Controller
 {
-    
+
     //subscription checkout
     public function checkout_stripe($coursrName, $plan){
         return view('frontend.checkout', compact('coursrName', 'plan'));
@@ -75,9 +76,9 @@ class SubscriptionController extends Controller
                     "Name" => $name,
                     "Email" => $email
                 ]
-                  
+
         ]);
-  
+
         $trxID = $transaction->id;
         $status = $transaction->status;
         $customer = $customer;
@@ -106,7 +107,7 @@ class SubscriptionController extends Controller
         }else{
             return abort(404);
         }
-        
+
     }
 
 
@@ -123,7 +124,7 @@ class SubscriptionController extends Controller
                     ->update([
                         'role'=>2,
                         'expeir_date'=>date('Y-m-d', strtotime($expireDate)),
-                        'free_use_trail'=>1,//once time used plan 
+                        'free_use_trail'=>1,//once time used plan
                         'trxID'=>NULL,
                         'customer_id'=>NULL,
                         'amount_paid'=>NULL,
@@ -135,10 +136,10 @@ class SubscriptionController extends Controller
                 }else{
                     return redirect()->back()->with('error', 'Sorry- Something wrong, please try agian');
                 }
-                
-            }   
-        
-            
+
+            }
+
+
         }elseif ($request->plan === "refugees_doctors") {
             if (RequestFor::where(['user_id'=>Auth::user()->id, 'status'=>NULL])->exists()) {
                 return redirect()->back()->with('no_access_permission__','You have already requested for Refugees Doctors Plan, please keep patience for approval');
@@ -155,12 +156,12 @@ class SubscriptionController extends Controller
                 if ($created == true) {
                     return back()->with('success_response', 'Your request has been submitted, please wait for approval');
                 }else{
-                   return redirect()->back()->with('error', 'Sorry- Something wrong, please try agian'); 
+                   return redirect()->back()->with('error', 'Sorry- Something wrong, please try agian');
                 }
             }
 
-            
-               
+
+
         }else{
             return back();
         }
@@ -187,32 +188,32 @@ class SubscriptionController extends Controller
                 ['role', '!=', '4'],
                 ['role', '>=', '2']
             ])->paginate(30);
-            
+
         $total_trail = User::where([
                 ['role', '=', '2']// 2 trail
             ])->count();
-        
+
         $total_refugees = User::where([
                 ['role', '=', '3']// 3 refugees
             ])->count();
-            
+
         $total_basic = User::where([
                 ['role', '=', '5']// 5 basic
             ])->count();
-            
+
         $total_standard = User::where([
                 ['role', '=', '6']// 6 standard
             ])->count();
-        
+
         $total_advanced = User::where([
                 ['role', '=', '7']// 7 advanced
             ])->count();
-        
+
         $total_professional = User::where([
                 ['role', '=', '8']// 7 professional
             ])->count();
-            
-        return view('backend.subscriber-list', compact('data', 'total_trail', 'total_refugees', 'total_basic', 
+
+        return view('backend.subscriber-list', compact('data', 'total_trail', 'total_refugees', 'total_basic',
                 'total_standard', 'total_advanced', 'total_professional'));
     }
 
@@ -244,7 +245,7 @@ class SubscriptionController extends Controller
                     ->update([
                         'role'=>3,
                         'expeir_date'=>$request->expire_date,
-                        'free_use_refugees'=>1,//once time used plan 
+                        'free_use_refugees'=>1,//once time used plan
                         'trxID'=>NULL,
                         'customer_id'=>NULL,
                         'amount_paid'=>NULL,
@@ -264,11 +265,11 @@ class SubscriptionController extends Controller
         }else{
             return redirect()->back()->with('error', 'SORRY- Request not Found!');
         }
-        
+
     }
-    
-    
-    
+
+
+
     public function get_registered_users(){
         $data = User::where([
                         ['deleted_at', '=', NULL],
@@ -276,7 +277,62 @@ class SubscriptionController extends Controller
                     ])
                     ->with('get_country')
                     ->orderBy('id', 'DESC')->paginate(30);
-                    
+
         return view('backend.users-list', compact('data'));
+    }
+
+    public function editSubscriber($id) {
+        $subscriber = User::find($id);
+
+        return view('backend.subscriber-edit', compact('subscriber'));
+    }
+
+    public function updateSubscriber(Request $request, $id) {
+
+        $validate = Validator::make($request->all(),[
+            'f_name'=>'required',
+            's_name'=>'required',
+            'email'=>'required|email',
+            'status'=>'required|in:0,1',
+            'extension'=>'required|date',
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'SORRY - Please fill out all fields');
+        }
+
+        $subscriber = User::find($id);
+        $subscriber->f_name = $request->f_name;
+        $subscriber->s_name = $request->s_name;
+        $subscriber->email = $request->email;
+        $subscriber->status = $request->status;
+        $subscriber->expeir_date = date('Y-m-d', strtotime($request->extension));
+        $subscriber->save();
+
+        return redirect()->route('subscriber_list')->with('success','Subscriber Details Updated Successfully!');
+    }
+
+    public function subscriberStatus($id) {
+        $subscriber = User::find($id);
+        $subscriber->status = $subscriber->status ? false : true;
+        $subscriber->save();
+        $subscriber->fresh();
+
+        if ($subscriber->status) {
+            $msg = 'Subscriber Has been Enabled Successfully!';
+        } else {
+            $msg = 'Subscriber Has been Disabled Successfully!';
+        }
+
+        return redirect()->route('subscriber_list')->with('success', $msg);
+    }
+
+    public function deleteSubscriber($id) {
+        $subscriber = User::find($id);
+        $subscriber->delete();
+
+        return redirect()->route('subscriber_list')->with('success', 'Subscriber has been deleted Successfully!');
     }
 }

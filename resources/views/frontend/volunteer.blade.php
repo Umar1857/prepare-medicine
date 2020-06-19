@@ -1,15 +1,16 @@
 @extends('frontend.master-frontend')
 @section('content')
-    <div class="container" style="padding-left: 30px; padding-right: 30px">
+    <br>
+    <div class="container-fluid">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Volunteer</p>
             </div>
         </div>
-        
-        {{--  data fetch from Database !!  --}}
-        {!! $data !!}
+        <div class="container">
+            {{--  data fetch from Database !!  --}}
+            {!! $data !!}
+        </div>
 
     </div>
     <br>

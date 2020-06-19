@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\feedback;
 use App\News;
+use App\Team;
 use App\ui_team_work;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class FrontendOurTeamController extends Controller
     function Index(){
 
         $data = ui_team_work::findOrFail(8)->content;
-        return view('frontend.our-team',['data'=>$data]);
+        $team_members = Team::all();
+        return view('frontend.our-team',['data'=>$data, 'team_members' => $team_members]);
     }
 
     function Volunteer(){
@@ -31,7 +33,7 @@ class FrontendOurTeamController extends Controller
 
         //$data = ui_team_work::findOrFail(5)->content;
         //return view('frontend.plab-news-updates',['data'=>$data]);
-        
+
         $blogs = News::orderBy('id', 'DESC')->paginate(30);
         return view('frontend.plab-news-updates', compact('blogs'));
     }

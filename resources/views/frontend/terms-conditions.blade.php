@@ -19,16 +19,18 @@
 @endsection
 
 @section('content')
+<br>
     <br>
-    <div class="container-fluid" style="padding-left: 30px; padding-right: 30px">
+    <div class="container-fluid">
         <div class='page_banner_img_common'>
-            <img src='/frontend/images/pages-banner.png' class='img-fluid'>
             <div class='overlay__'>
                 <p>Terms & Conditions</p>
             </div>
         </div>
-        
-        <h3>Acceptance of the Terms of Use</h3>
+        <div class="container">
+
+		
+		<h2 class="text-center mt-4 mb-sm-5 mb-4" style="font-size: 36px;">Acceptance of the Terms of Use</h2>
         <p>
         	Welcome to the website of PrepareMedicine PLC ("Company", "we" or "us"). The following terms and conditions,
 			together with any documents they expressly incorporate by reference (collectively, these "Terms of Use"), govern
@@ -790,6 +792,6 @@
 			at: help@preparemedicine.com or write to us at 130-132 Derby Street, Bolton BL36HG, United Kingdom.
 			PrepareMedicine.
 		</p>
+			</div>
     </div>
-    <br>
 @endsection

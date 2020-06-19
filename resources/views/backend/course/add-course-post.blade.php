@@ -3,20 +3,16 @@
 @section('js-css')
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
-    <style type="text/css">
-        .btn_custom_style{
-            background-color: #ddd;
-            color: #000
-        }
-    </style>
+
 @endsection
 
 @section('content')
+<br>
 
     <div class="alert alert-info" role="alert">Create Course</div>
     @include('msg.msg')
 
-    <form action="{{ route('course-list.store') }}" method="POST" enctype="multipart/form-data">
+    <form class="custom_form" action="{{ route('course-list.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <label><b>Title</b></label>
         <input id="title" type="text" name="title" placeholder="Enter title..." class="form-control">
@@ -32,7 +28,11 @@
         <label><b>Featured Image</b></label>
         <input id="featured_img" type="file" name="featured_img" accept="image/*">
         <br>
-        <input type="submit" class="btn btn_custom_style" value="Save" style="float:right">
+        <div class="form-group">
+            <label><b>Add Files</b></label>
+            <input type="file" name="reference_files[]" multiple>
+        </div>
+        <input type="submit" class="btn btn_custom_style btn-primary" value="SAVE COURSE" style="float:right">
     </form>
 
 @endsection
