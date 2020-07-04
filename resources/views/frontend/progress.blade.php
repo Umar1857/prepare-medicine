@@ -52,7 +52,6 @@
         .panel-white{
             background: white;
             padding: 10px;
-            margin: 30px 0;
         }
         .btn-left{
             float: right;
@@ -186,6 +185,13 @@
 
         .box_design__ .block___ .progress-fill span{
             color:#000;
+        }
+
+        @media all and (max-width:575px){
+            .block__box .progress_heading__ {
+                padding: 10px 5px;
+                font-size: 12px;
+            }
         }
 
 
@@ -442,7 +448,7 @@
             <div class="panel-heading clearfix">
                 <h4 class="panel-title heading_">Random Progress</h4>
             </div>
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>My Performance</h6>
@@ -517,14 +523,14 @@
             <div class="panel-heading clearfix">
                 <h4 class="panel-title heading_">Manual Progress</h4>
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 mb-4 mb-md-0">
+            <div class="row mb-4">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>My Performance</h6>
                         <div id="Manual" style="height: 300px; width: 100%;"></div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>All Users Performance</h6>
                         <div id="ManualS" style="height: 300px; width: 100%;"></div>
@@ -590,14 +596,14 @@
             <div class="panel-heading clearfix">
                 <h4 class="panel-title heading_">Recall Progress</h4>
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 mb-4 mb-md-0">
+            <div class="row mb-4">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>My Performance</h6>
                         <div id="Recall" style="height: 300px; width: 100%;"></div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>All Users Performance</h6>
                         <div id="RecallS" style="height: 300px; width: 100%;"></div>
@@ -612,15 +618,15 @@
             <div class="panel-heading clearfix">
                 <h4 class="panel-title heading_">Speciality Progress</h4>
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 mb-4 mb-md-0">
+            <div class="row mb-4">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>My Performance</h6>
                         <div id="Category" style="height: 300px; width: 100%;"></div>
                     </div>
 
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="col-6">
                     <div class="block__box">
                         <h6 class='progress_heading__'>All Users Performance</h6>
                         <div id="CategoryS" style="height: 300px; width: 100%;"></div>

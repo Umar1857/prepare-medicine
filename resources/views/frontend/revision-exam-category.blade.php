@@ -76,7 +76,7 @@
     }
     .wrong .form-radio:checked,
     .wrong .form-radio{
-        background-color:#dc3545;
+        background-color:#fb5252;
         color:#fff;
         border-color:transparent;
     }
@@ -137,8 +137,8 @@
         /* change */
         .search-box {
             background: #ffffff;
-            width: 28px;
-            height: 28px;
+            width: 22px;
+            height: 22px;
             padding: 0px;
             border-radius: 100%;
             text-align: center;
@@ -157,10 +157,10 @@
             background: #F4F1EC;
         }
         .success{
-            background: #d4edda;
+            background: #d4edda !important;
         }
         .wrong{
-            background: #F9C1C6;
+            background: #F9C1C6 !important;
         }
         .active-search-box{
             color: #fff;
@@ -215,6 +215,18 @@
 
         .top_action p{
             margin-right: 5px
+        }
+        @media all and (max-width:1440px){
+            .questions-wrapper #pc {
+                max-width: 300px;
+                flex: 0 0 300px;
+            }
+        }
+        @media all and (max-width:991px){
+            .questions-wrapper #pc {
+                max-width: 265px;
+                flex: 0 0 265px;
+            }
         }
 
         @media screen and (max-width: 483px){
@@ -285,7 +297,7 @@
         .answerColor3,
         .answerColor4,
         .answerColor5{
-            /*background: #f5f4f4;*/
+            background: #f5f4f4;
             padding: 10px 15px !important;
             border-radius: 5px;
             display:flex;
@@ -735,7 +747,7 @@
                 </div>
 
                 {{-- Right part of the exam --}}
-                <div class="col-lg-9 col-md-8 col-sm-12">
+                <div class="col-md">
 
                         <div class="card question_section">
                                 <div class="top_action d-flex justify-content-start">
@@ -1790,13 +1802,7 @@
                             @endif
                        </div>  {{-- EXPLANATION AND FEEDBACK SECTION END--}}
                         </div>
-
-
-
-
-
-
-
+                </div> 
                 {{-- Left part of the exam --}}
                 <div class="col-md-3" id="mobile">
                     <div class="area_first__">
@@ -2141,13 +2147,11 @@
                         @endif
                     @endif
                 </div>
-
-        </div> <!-- .row end here -->
-
-
-        @endforeach
+        </div>
     </div>
-    </div>
+
+    @endforeach
+ </div>
 
 <br>
 @endsection

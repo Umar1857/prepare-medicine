@@ -273,7 +273,7 @@ ul {
 }
 #hint #ValuesWrapper h3,
 .card h3 {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
@@ -360,6 +360,33 @@ ul {
     - Input Placeholder
 -----------------------------------------*/
 
+.select2-container--default .select2-selection--single {
+    border-radius: 10px;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    height: calc(2.25rem + 2px);
+}
+.select2-container--default .select2-selection--single::after {
+    content: "\02ef";
+    float: right;
+    position: relative;
+    bottom: 45px;
+    font-size: 40px;
+    right: -10px;
+}
+.select2-container--default
+    .select2-selection--single
+    .select2-selection__rendered {
+    line-height: 24px;
+    padding-left: 0;
+    padding-right: 0;
+}
+.select2-container--open .select2-dropdown {
+    left: -82px;
+    right: 0;
+    z-index: 10;
+    border-top: 1px solid #aaa;
+}
 input:-moz-placeholder,
 textarea:-moz-placeholder {
     opacity: 1;
@@ -1847,7 +1874,8 @@ label {
     position: absolute;
     top: -30px;
     color: #000;
-    left: 0;
+    left: auto !important;
+    right: 15px !important;
 }
 
 .mobile-menu .mean-bar .meanmenu-reveal span {
@@ -1963,9 +1991,12 @@ label {
     display: none;
 }
 
-.mobile-menu .mean-bar .mean-nav > ul li a:hover {
-    color: #ccc;
+.mobile-menu .mean-bar .mean-nav > ul li a:hover,
+.mobile-menu .mean-bar .mean-nav > ul li a:focus,
+.mobile-menu .mean-bar .mean-nav > ul li a:active {
+    color: #fff;
     padding-left: 25px;
+    background-color: #2a306c;
 }
 
 .mobile-menu .mean-bar .mean-nav > ul li a.mean-expand {
@@ -2011,6 +2042,7 @@ label {
     width: 100%;
     display: block !important;
     float: left;
+    background-color: transparent !important;
     width: 100%;
 }
 
@@ -2249,7 +2281,12 @@ label {
     font-size: 13px;
     margin-right: 20px;
 }
-
+.top-social ul li:last-of-type {
+    margin-right: 0;
+}
+.login-and-register {
+    margin-left: 10px;
+}
 .login-and-register ul li {
     display: inline-block;
     color: #ffffff;
@@ -4385,7 +4422,7 @@ button.botton-border:hover {
 }
 
 .footer-logo {
-    max-width: 300px;
+    max-width: 200px;
     margin: 0 auto;
 }
 
@@ -6192,6 +6229,9 @@ button.botton-border:hover {
     body {
         padding-top: 120px;
     }
+    .footer-logo a img {
+        max-width: 70%;
+    }
     .hero-slider #carouselExampleFade .carousel-caption {
         bottom: 35px;
     }
@@ -6222,9 +6262,6 @@ button.botton-border:hover {
     }
     body p {
         font-size: 14px !important;
-    }
-    .footer-logo {
-        max-width: 200px;
     }
     .scroll .logo-area a img,
     .logo-area a img {
@@ -6278,6 +6315,14 @@ button.botton-border:hover {
 /*# sourceMappingURL=style.css.map */
 
 /* modified CSS */
+@media all and (max-width: 991px) {
+    .pt-100 {
+        padding-top: 50px;
+    }
+    .pb-100 {
+        padding-bottom: 50px;
+    }
+}
 
 .asked-question {
     font-size: 16px;
@@ -6290,11 +6335,15 @@ button.botton-border:hover {
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
 }
-.exam-summary-graph div {
-    width: 100%;
-}
+
 @media all and (max-width: 767px) {
     .general-text {
         font-size: 14px;
     }
+}
+
+.select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+    display: none;
 }

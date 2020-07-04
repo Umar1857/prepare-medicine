@@ -1537,6 +1537,10 @@ mark {
     display: block;
     min-height: 250px;
 }
+.single-item-image a video,
+.blog-details video {
+    width: 100%;
+}
 .single-item-image {
     overflow: hidden;
     position: relative;
